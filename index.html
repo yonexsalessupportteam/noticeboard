@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>영업팀 공지</title>
+<title>영업팀 공지판</title>
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.css" />
 <style>
   :root{
@@ -120,6 +120,9 @@
   }
   .cal-cell.empty{background:transparent;}
   .cal-cell.today{border-color:var(--shipment);}
+  .cal-cell.has-items{cursor:pointer;transition:background .12s ease;}
+  .cal-cell.has-items:hover{background:var(--shipment-bg);}
+  .cal-cell.selected{background:var(--shipment-bg);border-color:var(--shipment);}
   .cal-date{font-size:11.5px;font-weight:600;color:var(--ink-soft);}
   .cal-chip{
     font-size:10.5px;font-weight:600;color:var(--shipment);background:var(--shipment-bg);
@@ -127,6 +130,9 @@
     overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
   }
   .cal-more{font-size:10px;color:var(--ink-faint);padding-left:2px;}
+  .cal-detail{margin-top:16px;}
+  .cal-detail-label{font-size:12px;font-weight:700;color:var(--ink-faint);margin-bottom:10px;}
+  .cal-detail-items{display:flex;flex-direction:column;gap:8px;}
 </style>
 </head>
 <body>
@@ -210,8 +216,13 @@ const NOTICES = [
     body: "온라인몰 대리점 관리 담당이 변경되었습니다.",
     author: "E-BIZ팀", date: "2026-07-12"
   },
-  { id: 20, pinned: false, category: "shipment", title: "263TS011/012 263TS017/018 263TS035 263TS038~040 263TS044 263TS046/048(전략점 전용) 263TS050U(온라인전용)", body: "전국 대리점 라켓 신상품 출고", author: "영업지원팀", date: "2026-07-29" },
-  
+  { id: 20, pinned: false, category: "shipment", title: "라켓 시리즈 출고", body: "전국 대리점 라켓 신상품 출고", author: "영업지원팀", date: "2026-07-08" },
+  { id: 21, pinned: false, category: "shipment", title: "의류 하계 2차 출고", body: "하계 의류 2차 물량 출고", author: "영업지원팀", date: "2026-07-14" },
+  { id: 22, pinned: false, category: "shipment", title: "○○스포츠 개별 출고", body: "개별 발주건 출고", author: "영업지원팀", date: "2026-07-14" },
+  { id: 23, pinned: false, category: "shipment", title: "슈즈 정기 출고", body: "슈즈 정기 출고 일정", author: "영업지원팀", date: "2026-07-18" },
+  { id: 24, pinned: false, category: "shipment", title: "용품 3차 출고", body: "그립/스트링 등 용품 출고", author: "영업지원팀", date: "2026-07-23" },
+  { id: 25, pinned: false, category: "shipment", title: "△△스포츠 개별 출고", body: "개별 발주건 출고", author: "영업지원팀", date: "2026-07-23" },
+  { id: 26, pinned: false, category: "shipment", title: "가방/액세서리 출고", body: "가방·액세서리 정기 출고", author: "영업지원팀", date: "2026-07-29" },
 ];
 
 // 달력에 표시할 기준 월 (접속 시점 기준 자동 설정, 필요시 수동 조정 가능)
@@ -280,6 +291,8 @@ function renderFeed(){
   document.getElementById('emptyState').classList.toggle('hidden', pinned.length + rest.length > 0);
 }
 
+let selectedDate = null;
+
 function renderCalendar(){
   const term = searchTerm.trim().toLowerCase();
   const shipments = NOTICES.filter(n => n.category === 'shipment' &&
@@ -295,20 +308,33 @@ function renderCalendar(){
 
   const todayStr = `${_today.getFullYear()}-${String(_today.getMonth()+1).padStart(2,'0')}-${String(_today.getDate()).padStart(2,'0')}`;
 
+  // 월이 바뀌면 선택 해제
+  if(selectedDate && !selectedDate.startsWith(`${calYear}-${String(calMonth).padStart(2,'0')}`)){
+    selectedDate = null;
+  }
+
   let cells = '';
   for(let i=0;i<startWeekday;i++){ cells += `<div class="cal-cell empty"></div>`; }
   for(let day=1; day<=daysInMonth; day++){
     const dateStr = `${calYear}-${String(calMonth).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
     const items = byDate[dateStr] || [];
     const isToday = dateStr === todayStr;
-    const chips = items.slice(0,2).map(n => `<div class="cal-chip" title="${n.title}">${n.title}</div>`).join('');
-    const more = items.length > 2 ? `<div class="cal-more">+${items.length-2}건</div>` : '';
+    const isSelected = dateStr === selectedDate;
+    const hasItems = items.length > 0;
+    const chips = items.slice(0,1).map(n => `<div class="cal-chip" title="${n.title}">${n.title}</div>`).join('');
+    const more = items.length > 1 ? `<div class="cal-more">+${items.length-1}건</div>` : '';
+    const classes = ['cal-cell'];
+    if(isToday) classes.push('today');
+    if(hasItems) classes.push('has-items');
+    if(isSelected) classes.push('selected');
     cells += `
-      <div class="cal-cell${isToday ? ' today' : ''}">
+      <div class="${classes.join(' ')}" ${hasItems ? `data-date="${dateStr}"` : ''}>
         <div class="cal-date">${day}</div>
         ${chips}${more}
       </div>`;
   }
+
+  const detail = selectedDate ? renderCalDetailHTML(selectedDate, byDate[selectedDate] || []) : '';
 
   document.getElementById('mainView').innerHTML = `
     <div class="cal-wrap">
@@ -324,11 +350,26 @@ function renderCalendar(){
         <div class="cal-dow">수</div><div class="cal-dow">목</div><div class="cal-dow">금</div><div class="cal-dow">토</div>
         ${cells}
       </div>
+      <div class="cal-detail" id="calDetail">${detail}</div>
     </div>`;
 
   document.getElementById('emptyState').classList.add('hidden');
   document.getElementById('calPrev').addEventListener('click', () => shiftMonth(-1));
   document.getElementById('calNext').addEventListener('click', () => shiftMonth(1));
+  document.querySelectorAll('.cal-cell.has-items').forEach(cell => {
+    cell.addEventListener('click', () => {
+      const d = cell.dataset.date;
+      selectedDate = (selectedDate === d) ? null : d;
+      renderCalendar();
+    });
+  });
+}
+
+function renderCalDetailHTML(dateStr, items){
+  if(items.length === 0) return '';
+  return `
+    <div class="cal-detail-label">${formatDate(dateStr)} 출고공지 (${items.length}건)</div>
+    <div class="cal-detail-items">${items.map(noticeCardHTML).join('')}</div>`;
 }
 
 function shiftMonth(delta){
