@@ -3,27 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>영업팀 공지</title>
+<title>26F/W 수주 출고 스케줄</title>
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.css" />
 <style>
   :root{
-    --bg:#FAFAFA;
+    --bg:#F5F6F8;
     --surface:#FFFFFF;
-    --border:#E9E9EC;
+    --border:#E4E6EA;
     --ink:#151519;
-    --ink-soft:#7A7A83;
-    --ink-faint:#B3B3BA;
-    --accent:#2F5CE0;
-    --accent-bg:#EEF2FF;
-
-    --notice:#5B6472;
-    --notice-bg:#EFF0F2;
-    --order:#B8860B;
-    --order-bg:#FBF3DE;
+    --ink-soft:#6B7280;
+    --ink-faint:#A8ADB6;
     --shipment:#0F9D8E;
-    --shipment-bg:#E7F7F4;
-    --dealer:#E14C4C;
-    --dealer-bg:#FDEEEE;
+    --shipment-bg:#E1F5F1;
+    --shipment-dark:#0B7A6E;
   }
   *{box-sizing:border-box;}
   body{
@@ -33,162 +25,132 @@
     font-family:'Pretendard Variable', Pretendard, -apple-system, sans-serif;
     -webkit-font-smoothing:antialiased;
   }
-  .wrap{max-width:760px;margin:0 auto;padding:56px 24px 100px;}
+  .wrap{max-width:980px;margin:0 auto;padding:44px 28px 100px;}
 
   header.board-head{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    margin-bottom:32px;
+    text-align:center;
+    margin-bottom:30px;
   }
-  .board-title{font-weight:700;font-size:24px;letter-spacing:-0.5px;margin:0;}
-  .board-meta{font-size:12.5px;color:var(--ink-faint);font-weight:500;}
+  .board-title{
+    font-weight:800;
+    font-size:32px;
+    letter-spacing:-0.6px;
+    margin:0 0 8px;
+    color:var(--ink);
+  }
+  .board-sub{
+    font-size:14px;
+    color:var(--ink-soft);
+    font-weight:500;
+  }
+  .board-meta{
+    font-size:12px;
+    color:var(--ink-faint);
+    font-weight:500;
+    margin-top:6px;
+  }
 
   .toolbar{
-    display:flex;gap:10px;flex-wrap:wrap;align-items:center;
-    justify-content:space-between;margin-bottom:28px;
+    display:flex;
+    justify-content:center;
+    margin-bottom:24px;
   }
-  .filters{display:flex;gap:6px;flex-wrap:wrap;}
-  .filter-btn{
-    font-size:13px;font-weight:600;padding:7px 14px;border-radius:20px;
-    border:1px solid var(--border);background:var(--surface);color:var(--ink-soft);
-    cursor:pointer;transition:all .15s ease;
-  }
-  .filter-btn:hover{border-color:var(--ink-faint);color:var(--ink);}
-  .filter-btn.active{background:var(--ink);color:#fff;border-color:var(--ink);}
   .search-box{
-    font-family:inherit;font-size:13.5px;padding:9px 14px;border:1px solid var(--border);
-    border-radius:20px;background:var(--surface);width:180px;color:var(--ink);
+    font-family:inherit;font-size:15px;padding:12px 20px;border:1.5px solid var(--border);
+    border-radius:24px;background:var(--surface);width:320px;max-width:100%;color:var(--ink);
+    text-align:center;
   }
   .search-box::placeholder{color:var(--ink-faint);}
-  .search-box:focus{outline:none;border-color:var(--ink-faint);}
+  .search-box:focus{outline:none;border-color:var(--shipment);}
 
-  .pinned-section{margin-bottom:32px;}
-  .rail-label{
-    font-size:12px;font-weight:700;letter-spacing:0.3px;color:var(--ink-faint);
-    text-transform:uppercase;margin-bottom:10px;
+  /* Calendar */
+  .cal-wrap{
+    background:var(--surface);border:1px solid var(--border);border-radius:20px;
+    padding:32px;box-shadow:0 4px 24px rgba(20,25,35,0.05);
   }
-  .pin-card{
-    background:var(--accent-bg);border:1px solid #DCE4FB;border-radius:12px;
-    padding:16px 18px;margin-bottom:8px;
-  }
-
-  .tag{
-    font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:6px;
-    display:inline-flex;align-items:center;gap:5px;white-space:nowrap;
-  }
-  .tag::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;}
-  .tag.notice{color:var(--notice);background:var(--notice-bg);}
-  .tag.order{color:var(--order);background:var(--order-bg);}
-  .tag.shipment{color:var(--shipment);background:var(--shipment-bg);}
-  .tag.dealer{color:var(--dealer);background:var(--dealer-bg);}
-
-  .day-group{margin-bottom:26px;}
-  .day-label{font-size:12px;font-weight:700;color:var(--ink-faint);margin-bottom:10px;padding-left:2px;}
-  .day-items{display:flex;flex-direction:column;gap:8px;}
-
-  .notice-card{
-    background:var(--surface);border:1px solid var(--border);border-radius:12px;
-    padding:16px 18px;transition:border-color .15s ease, box-shadow .15s ease;
-  }
-  .notice-card:hover{border-color:var(--ink-faint);box-shadow:0 2px 10px rgba(0,0,0,0.04);}
-  .notice-top{display:flex;align-items:center;gap:9px;margin-bottom:7px;flex-wrap:wrap;}
-  .notice-title{font-weight:600;font-size:15px;color:var(--ink);}
-  .notice-body{font-size:13.5px;color:var(--ink-soft);line-height:1.6;}
-  .notice-author{font-size:11.5px;color:var(--ink-faint);margin-top:9px;font-weight:500;}
-
-  .hidden{display:none !important;}
-  .empty-state{text-align:center;padding:60px 20px;color:var(--ink-faint);font-size:13px;}
-
-  /* Calendar view */
-  .cal-wrap{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;}
-  .cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
-  .cal-month{font-weight:700;font-size:16px;}
-  .cal-nav{display:flex;gap:4px;}
+  .cal-head{display:flex;align-items:center;justify-content:center;gap:18px;margin-bottom:24px;}
+  .cal-month{font-weight:800;font-size:22px;letter-spacing:-0.3px;min-width:160px;text-align:center;}
   .cal-nav button{
-    width:30px;height:30px;border-radius:8px;border:1px solid var(--border);background:var(--surface);
-    color:var(--ink-soft);cursor:pointer;font-size:14px;line-height:1;
+    width:38px;height:38px;border-radius:10px;border:1px solid var(--border);background:var(--surface);
+    color:var(--ink-soft);cursor:pointer;font-size:17px;line-height:1;
   }
-  .cal-nav button:hover{border-color:var(--ink-faint);color:var(--ink);}
-  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+  .cal-nav button:hover{border-color:var(--shipment);color:var(--shipment-dark);}
+
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;}
   .cal-dow{
-    font-size:11px;font-weight:700;color:var(--ink-faint);text-align:center;padding:4px 0 8px;
+    font-size:13px;font-weight:700;color:var(--ink-faint);text-align:center;padding:6px 0 12px;
   }
+  .cal-dow.sun{color:#D14343;}
+  .cal-dow.sat{color:#2F5CE0;}
+
   .cal-cell{
-    min-height:78px;border-radius:8px;padding:6px 5px;background:var(--bg);
-    border:1px solid transparent;display:flex;flex-direction:column;gap:3px;
+    min-height:112px;border-radius:12px;padding:10px 8px;background:var(--bg);
+    border:1.5px solid transparent;display:flex;flex-direction:column;gap:5px;
   }
   .cal-cell.empty{background:transparent;}
-  .cal-cell.today{border-color:var(--shipment);}
-  .cal-cell.has-items{cursor:pointer;transition:background .12s ease;}
+  .cal-cell.today{border-color:var(--shipment);background:#F0FAF8;}
+  .cal-cell.has-items{cursor:pointer;transition:all .12s ease;}
   .cal-cell.has-items:hover{background:var(--shipment-bg);}
-  .cal-cell.selected{background:var(--shipment-bg);border-color:var(--shipment);}
-  .cal-date{font-size:11.5px;font-weight:600;color:var(--ink-soft);}
+  .cal-cell.selected{background:var(--shipment-bg);border-color:var(--shipment-dark);}
+  .cal-date{font-size:14px;font-weight:700;color:var(--ink);}
+  .cal-cell.empty .cal-date{color:transparent;}
   .cal-chip{
-    font-size:10.5px;font-weight:600;color:var(--shipment);background:var(--shipment-bg);
-    border-radius:5px;padding:2px 5px;line-height:1.35;
+    font-size:12px;font-weight:700;color:var(--shipment-dark);background:var(--shipment-bg);
+    border-radius:6px;padding:4px 7px;line-height:1.35;
     overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
   }
-  .cal-more{font-size:10px;color:var(--ink-faint);padding-left:2px;}
-  .cal-detail{margin-top:16px;}
-  .cal-detail-label{font-size:12px;font-weight:700;color:var(--ink-faint);margin-bottom:10px;}
-  .cal-detail-items{display:flex;flex-direction:column;gap:8px;}
+  .cal-more{font-size:11.5px;color:var(--ink-soft);font-weight:600;padding-left:2px;}
+
+  .cal-detail{margin-top:26px;padding-top:24px;border-top:1px solid var(--border);}
+  .cal-detail-label{font-size:15px;font-weight:800;color:var(--ink);margin-bottom:14px;}
+  .cal-detail-items{display:flex;flex-direction:column;gap:10px;}
+  .notice-card{
+    background:var(--bg);border:1px solid var(--border);border-radius:14px;
+    padding:18px 20px;
+  }
+  .notice-title{font-weight:700;font-size:16px;color:var(--ink);}
+  .notice-body{font-size:14px;color:var(--ink-soft);line-height:1.6;margin-top:6px;}
+  .notice-author{font-size:12px;color:var(--ink-faint);margin-top:10px;font-weight:500;}
+
+  .empty-state{
+    text-align:center;padding:16px 0 0;color:var(--ink-faint);font-size:13.5px;
+  }
+
+  @media (max-width:640px){
+    .board-title{font-size:24px;}
+    .cal-wrap{padding:18px;}
+    .cal-cell{min-height:80px;padding:6px 4px;}
+    .cal-chip{font-size:10.5px;padding:3px 5px;}
+  }
 </style>
 </head>
 <body>
 <div class="wrap">
 
   <header class="board-head">
-    <h1 class="board-title">영업팀 공지</h1>
+    <h1 class="board-title">26F/W 수주 출고 스케줄</h1>
+    <div class="board-sub">대리점 안내용</div>
     <div class="board-meta">최근 업데이트 2026.07.22</div>
   </header>
 
   <div class="toolbar">
-    <div class="filters" id="filters">
-      <button class="filter-btn active" data-cat="all">전체</button>
-      <button class="filter-btn" data-cat="notice">공지</button>
-      <button class="filter-btn" data-cat="order">주문공지</button>
-      <button class="filter-btn" data-cat="shipment">출고공지</button>
-      <button class="filter-btn" data-cat="dealer">대리점이슈</button>
-    </div>
-    <input class="search-box" id="searchBox" type="text" placeholder="공지 검색">
-  </div>
-
-  <div class="pinned-section" id="pinnedSection">
-    <div class="rail-label">고정 공지</div>
-    <div id="pinnedList"></div>
+    <input class="search-box" id="searchBox" type="text" placeholder="상품코드/품목 검색">
   </div>
 
   <div id="mainView"></div>
-  <div class="empty-state hidden" id="emptyState">검색 결과가 없습니다</div>
 
 </div>
 
 <script>
-const CATEGORY = {
-  notice:   { label: "공지",     class: "notice" },
-  order:    { label: "주문공지", class: "order" },
-  shipment: { label: "출고공지", class: "shipment" },
-  dealer:   { label: "대리점이슈", class: "dealer" },
-};
-
-// 여기 배열만 직접 수정하면 공지가 반영됩니다.
+// 여기 배열만 직접 수정하면 출고 스케줄이 반영됩니다.
 const NOTICES = [
-  {
-    id: 2, pinned: true, category: "order",
-    title: "7/22 주문공지",
-    body: "263TS011/012/263TS035/263TS038~040/263TS044/263TS046/048(전략점 전용) ->익일 오전 11시까지 등록 부탁드립니다.",
-    author: "영업지원팀 · 구나연", date: "2026-07-20"
-  },
-  { id: 20, pinned: false, category: "shipment", title: "게임웨어/캐쥬얼웨어 출고", body: "263TS011/012/263TS035/263TS038~040/263TS044/263TS046/048(전략점 전용)", author: "영업지원팀", date: "2026-07-29" },
+  { id: 20, title: "게임웨어/캐쥬얼웨어 출고", body: "263TS011/012/263TS035/263TS038~040/263TS044/263TS046/048(전략점 전용)", author: "영업지원팀", date: "2026-07-29" },
 ];
 
-// 달력에 표시할 기준 월 (접속 시점 기준 자동 설정, 필요시 수동 조정 가능)
 const _today = new Date();
 let calYear = _today.getFullYear();
 let calMonth = _today.getMonth() + 1; // 1~12
-
-let activeCat = "all";
+let selectedDate = null;
 let searchTerm = "";
 
 function formatDate(d){
@@ -196,91 +158,52 @@ function formatDate(d){
   return `${m}월 ${day}일`;
 }
 
-function matches(n){
-  const catOk = activeCat === "all" || n.category === activeCat;
-  const term = searchTerm.trim().toLowerCase();
-  const searchOk = !term || n.title.toLowerCase().includes(term) || n.body.toLowerCase().includes(term);
-  return catOk && searchOk;
-}
-
 function noticeCardHTML(n){
-  const cat = CATEGORY[n.category];
   return `
     <div class="notice-card">
-      <div class="notice-top">
-        <span class="tag ${cat.class}">${cat.label}</span>
-        <span class="notice-title">${n.title}</span>
-      </div>
+      <div class="notice-title">${n.title}</div>
       <div class="notice-body">${n.body}</div>
       <div class="notice-author">${n.author} · ${n.date}</div>
     </div>`;
 }
 
-function pinCardHTML(n){
-  const cat = CATEGORY[n.category];
+function renderCalDetailHTML(dateStr, items){
+  if(items.length === 0) return '';
   return `
-    <div class="pin-card">
-      <div class="notice-top">
-        <span class="tag ${cat.class}">${cat.label}</span>
-        <span class="notice-title">${n.title}</span>
-      </div>
-      <div class="notice-body">${n.body}</div>
-      <div class="notice-author">${n.author} · ${n.date}</div>
+    <div class="cal-detail">
+      <div class="cal-detail-label">${formatDate(dateStr)} 출고 스케줄 (${items.length}건)</div>
+      <div class="cal-detail-items">${items.map(noticeCardHTML).join('')}</div>
     </div>`;
 }
-
-function renderFeed(){
-  const rest = NOTICES.filter(n => !n.pinned && matches(n));
-  const groups = {};
-  rest.forEach(n => {
-    groups[n.date] = groups[n.date] || [];
-    groups[n.date].push(n);
-  });
-  const dates = Object.keys(groups).sort((a,b) => b.localeCompare(a));
-
-  document.getElementById('mainView').innerHTML = dates.map(d => `
-    <div class="day-group">
-      <div class="day-label">${formatDate(d)}</div>
-      <div class="day-items">${groups[d].map(noticeCardHTML).join('')}</div>
-    </div>
-  `).join('');
-
-  const pinned = NOTICES.filter(n => n.pinned && matches(n));
-  document.getElementById('emptyState').classList.toggle('hidden', pinned.length + rest.length > 0);
-}
-
-let selectedDate = null;
 
 function renderCalendar(){
   const term = searchTerm.trim().toLowerCase();
-  const shipments = NOTICES.filter(n => n.category === 'shipment' &&
-    (!term || n.title.toLowerCase().includes(term) || n.body.toLowerCase().includes(term)));
+  const shipments = NOTICES.filter(n =>
+    !term || n.title.toLowerCase().includes(term) || n.body.toLowerCase().includes(term));
 
   const byDate = {};
   shipments.forEach(n => { (byDate[n.date] = byDate[n.date] || []).push(n); });
 
   const firstOfMonth = new Date(calYear, calMonth - 1, 1);
   const daysInMonth = new Date(calYear, calMonth, 0).getDate();
-  const startWeekday = firstOfMonth.getDay(); // 0 = Sun
+  const startWeekday = firstOfMonth.getDay();
   const monthLabel = `${calYear}년 ${calMonth}월`;
-
   const todayStr = `${_today.getFullYear()}-${String(_today.getMonth()+1).padStart(2,'0')}-${String(_today.getDate()).padStart(2,'0')}`;
 
-  // 월이 바뀌면 선택 해제
   if(selectedDate && !selectedDate.startsWith(`${calYear}-${String(calMonth).padStart(2,'0')}`)){
     selectedDate = null;
   }
 
   let cells = '';
-  for(let i=0;i<startWeekday;i++){ cells += `<div class="cal-cell empty"></div>`; }
+  for(let i=0;i<startWeekday;i++){ cells += `<div class="cal-cell empty"><div class="cal-date">-</div></div>`; }
   for(let day=1; day<=daysInMonth; day++){
     const dateStr = `${calYear}-${String(calMonth).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
     const items = byDate[dateStr] || [];
     const isToday = dateStr === todayStr;
     const isSelected = dateStr === selectedDate;
     const hasItems = items.length > 0;
-    const chips = items.slice(0,1).map(n => `<div class="cal-chip" title="${n.title}">${n.title}</div>`).join('');
-    const more = items.length > 1 ? `<div class="cal-more">+${items.length-1}건</div>` : '';
+    const chips = items.slice(0,2).map(n => `<div class="cal-chip" title="${n.title}">${n.title}</div>`).join('');
+    const more = items.length > 2 ? `<div class="cal-more">+${items.length-2}건</div>` : '';
     const classes = ['cal-cell'];
     if(isToday) classes.push('today');
     if(hasItems) classes.push('has-items');
@@ -293,25 +216,24 @@ function renderCalendar(){
   }
 
   const detail = selectedDate ? renderCalDetailHTML(selectedDate, byDate[selectedDate] || []) : '';
+  const totalCount = shipments.length;
 
   document.getElementById('mainView').innerHTML = `
     <div class="cal-wrap">
       <div class="cal-head">
-        <div class="cal-month">${monthLabel} 출고공지</div>
-        <div class="cal-nav">
-          <button id="calPrev">‹</button>
-          <button id="calNext">›</button>
-        </div>
+        <div class="cal-nav"><button id="calPrev">‹</button></div>
+        <div class="cal-month">${monthLabel}</div>
+        <div class="cal-nav"><button id="calNext">›</button></div>
       </div>
       <div class="cal-grid">
-        <div class="cal-dow">일</div><div class="cal-dow">월</div><div class="cal-dow">화</div>
-        <div class="cal-dow">수</div><div class="cal-dow">목</div><div class="cal-dow">금</div><div class="cal-dow">토</div>
+        <div class="cal-dow sun">일</div><div class="cal-dow">월</div><div class="cal-dow">화</div>
+        <div class="cal-dow">수</div><div class="cal-dow">목</div><div class="cal-dow">금</div><div class="cal-dow sat">토</div>
         ${cells}
       </div>
-      <div class="cal-detail" id="calDetail">${detail}</div>
+      ${detail}
+      ${totalCount === 0 ? '<div class="empty-state">검색 결과가 없습니다</div>' : ''}
     </div>`;
 
-  document.getElementById('emptyState').classList.add('hidden');
   document.getElementById('calPrev').addEventListener('click', () => shiftMonth(-1));
   document.getElementById('calNext').addEventListener('click', () => shiftMonth(1));
   document.querySelectorAll('.cal-cell.has-items').forEach(cell => {
@@ -323,13 +245,6 @@ function renderCalendar(){
   });
 }
 
-function renderCalDetailHTML(dateStr, items){
-  if(items.length === 0) return '';
-  return `
-    <div class="cal-detail-label">${formatDate(dateStr)} 출고공지 (${items.length}건)</div>
-    <div class="cal-detail-items">${items.map(noticeCardHTML).join('')}</div>`;
-}
-
 function shiftMonth(delta){
   calMonth += delta;
   if(calMonth < 1){ calMonth = 12; calYear -= 1; }
@@ -337,33 +252,12 @@ function shiftMonth(delta){
   renderCalendar();
 }
 
-function render(){
-  const pinned = NOTICES.filter(n => n.pinned && matches(n));
-  document.getElementById('pinnedSection').classList.toggle('hidden', pinned.length === 0 || activeCat === 'shipment');
-  document.getElementById('pinnedList').innerHTML = pinned.map(pinCardHTML).join('');
-
-  if(activeCat === 'shipment'){
-    renderCalendar();
-  } else {
-    renderFeed();
-  }
-}
-
-document.getElementById('filters').addEventListener('click', (e) => {
-  const btn = e.target.closest('.filter-btn');
-  if(!btn) return;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  activeCat = btn.dataset.cat;
-  render();
-});
-
 document.getElementById('searchBox').addEventListener('input', (e) => {
   searchTerm = e.target.value;
-  render();
+  renderCalendar();
 });
 
-render();
+renderCalendar();
 </script>
 </body>
 </html>
