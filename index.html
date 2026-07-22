@@ -7,15 +7,20 @@
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.css" />
 <style>
   :root{
-    --bg:#F5F6F8;
+    --bg:#EFF6FB;
     --surface:#FFFFFF;
-    --border:#E4E6EA;
-    --ink:#151519;
-    --ink-soft:#6B7280;
-    --ink-faint:#A8ADB6;
-    --shipment:#0F9D8E;
-    --shipment-bg:#E1F5F1;
-    --shipment-dark:#0B7A6E;
+    --border:#DCE9F5;
+    --ink:#132433;
+    --ink-soft:#5C7288;
+    --ink-faint:#9BAEC2;
+
+    --teal:#2E9AE0;
+    --teal-dark:#1868B0;
+    --teal-light:#E4F3FC;
+    --amber:#F5A623;
+    --amber-light:#FDECC8;
+    --coral:#E8604C;
+    --blue:#7C5CE0;
   }
   *{box-sizing:border-box;}
   body{
@@ -25,92 +30,113 @@
     font-family:'Pretendard Variable', Pretendard, -apple-system, sans-serif;
     -webkit-font-smoothing:antialiased;
   }
-  .wrap{max-width:980px;margin:0 auto;padding:44px 28px 100px;}
+  .wrap{max-width:980px;margin:0 auto;padding:48px 24px 100px;}
 
+  /* Header */
   header.board-head{
     text-align:center;
-    margin-bottom:30px;
+    margin-bottom:28px;
   }
   .board-title{
     font-weight:800;
     font-size:32px;
     letter-spacing:-0.6px;
-    margin:0 0 8px;
+    margin:0 0 10px;
     color:var(--ink);
   }
+  .board-title .accent{color:var(--teal);}
   .board-sub{
-    font-size:14px;
-    color:var(--ink-soft);
-    font-weight:500;
+    display:inline-block;
+    font-size:12.5px;
+    font-weight:700;
+    color:var(--teal-dark);
+    background:var(--teal-light);
+    padding:5px 14px;
+    border-radius:20px;
+    letter-spacing:0.2px;
   }
   .board-meta{
     font-size:12px;
     color:var(--ink-faint);
     font-weight:500;
-    margin-top:6px;
+    margin-top:12px;
   }
+
+  .content{position:relative;}
 
   .toolbar{
     display:flex;
     justify-content:center;
-    margin-bottom:24px;
+    margin-bottom:20px;
   }
   .search-box{
-    font-family:inherit;font-size:15px;padding:12px 20px;border:1.5px solid var(--border);
+    font-family:inherit;font-size:14.5px;padding:12px 20px;border:none;
     border-radius:24px;background:var(--surface);width:320px;max-width:100%;color:var(--ink);
     text-align:center;
+    box-shadow:0 6px 20px rgba(20,90,160,0.10);
   }
   .search-box::placeholder{color:var(--ink-faint);}
-  .search-box:focus{outline:none;border-color:var(--shipment);}
+  .search-box:focus{outline:none;box-shadow:0 0 0 3px var(--teal-light), 0 6px 20px rgba(20,90,160,0.10);}
 
   /* Calendar */
   .cal-wrap{
-    background:var(--surface);border:1px solid var(--border);border-radius:20px;
-    padding:32px;box-shadow:0 4px 24px rgba(20,25,35,0.05);
+    background:var(--surface);border:1px solid var(--border);border-radius:24px;
+    padding:32px;box-shadow:0 10px 40px rgba(20,90,160,0.08);
   }
-  .cal-head{display:flex;align-items:center;justify-content:center;gap:18px;margin-bottom:24px;}
-  .cal-month{font-weight:800;font-size:22px;letter-spacing:-0.3px;min-width:160px;text-align:center;}
+  .cal-head{display:flex;align-items:center;justify-content:center;gap:20px;margin-bottom:26px;}
+  .cal-month{font-weight:800;font-size:21px;letter-spacing:-0.3px;min-width:150px;text-align:center;color:var(--ink);}
   .cal-nav button{
-    width:38px;height:38px;border-radius:10px;border:1px solid var(--border);background:var(--surface);
-    color:var(--ink-soft);cursor:pointer;font-size:17px;line-height:1;
+    width:38px;height:38px;border-radius:12px;border:none;background:var(--teal-light);
+    color:var(--teal-dark);cursor:pointer;font-size:17px;line-height:1;font-weight:700;
+    transition:background .15s ease;
   }
-  .cal-nav button:hover{border-color:var(--shipment);color:var(--shipment-dark);}
+  .cal-nav button:hover{background:var(--teal);color:#fff;}
 
   .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;}
   .cal-dow{
-    font-size:13px;font-weight:700;color:var(--ink-faint);text-align:center;padding:6px 0 12px;
+    font-size:12.5px;font-weight:800;color:var(--ink-faint);text-align:center;padding:6px 0 12px;
+    text-transform:uppercase;letter-spacing:0.3px;
   }
-  .cal-dow.sun{color:#D14343;}
-  .cal-dow.sat{color:#2F5CE0;}
+  .cal-dow.sun{color:var(--coral);}
+  .cal-dow.sat{color:var(--blue);}
 
   .cal-cell{
-    min-height:112px;border-radius:12px;padding:10px 8px;background:var(--bg);
+    min-height:108px;border-radius:14px;padding:10px 8px;background:#F3F9FD;
     border:1.5px solid transparent;display:flex;flex-direction:column;gap:5px;
+    transition:all .12s ease;
   }
   .cal-cell.empty{background:transparent;}
-  .cal-cell.today{border-color:var(--shipment);background:#F0FAF8;}
-  .cal-cell.has-items{cursor:pointer;transition:all .12s ease;}
-  .cal-cell.has-items:hover{background:var(--shipment-bg);}
-  .cal-cell.selected{background:var(--shipment-bg);border-color:var(--shipment-dark);}
+  .cal-cell.today{border-color:var(--amber);background:var(--amber-light);}
+  .cal-cell.today .cal-date{color:#B9791A;}
+  .cal-cell.has-items{cursor:pointer;}
+  .cal-cell.has-items:hover{background:var(--teal-light);transform:translateY(-1px);}
+  .cal-cell.selected{background:var(--teal);border-color:var(--teal-dark);}
+  .cal-cell.selected .cal-date{color:#fff;}
+  .cal-cell.selected .cal-chip{background:rgba(255,255,255,0.9);color:var(--teal-dark);}
+  .cal-cell.selected .cal-more{color:rgba(255,255,255,0.85);}
   .cal-date{font-size:14px;font-weight:700;color:var(--ink);}
   .cal-cell.empty .cal-date{color:transparent;}
   .cal-chip{
-    font-size:12px;font-weight:700;color:var(--shipment-dark);background:var(--shipment-bg);
-    border-radius:6px;padding:4px 7px;line-height:1.35;
+    font-size:11.5px;font-weight:700;color:var(--teal-dark);background:var(--teal-light);
+    border-radius:7px;padding:4px 7px;line-height:1.35;
     overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
   }
-  .cal-more{font-size:11.5px;color:var(--ink-soft);font-weight:600;padding-left:2px;}
+  .cal-more{font-size:11px;color:var(--ink-soft);font-weight:700;padding-left:2px;}
 
-  .cal-detail{margin-top:26px;padding-top:24px;border-top:1px solid var(--border);}
-  .cal-detail-label{font-size:15px;font-weight:800;color:var(--ink);margin-bottom:14px;}
+  .cal-detail{margin-top:28px;padding-top:26px;border-top:2px dashed var(--border);}
+  .cal-detail-label{
+    font-size:15px;font-weight:800;color:var(--teal-dark);margin-bottom:14px;
+    display:flex;align-items:center;gap:8px;
+  }
+  .cal-detail-label::before{content:"📦";}
   .cal-detail-items{display:flex;flex-direction:column;gap:10px;}
   .notice-card{
-    background:var(--bg);border:1px solid var(--border);border-radius:14px;
-    padding:18px 20px;
+    background:#F3F9FD;border-left:4px solid var(--teal);border-radius:12px;
+    padding:16px 20px;
   }
-  .notice-title{font-weight:700;font-size:16px;color:var(--ink);}
-  .notice-body{font-size:14px;color:var(--ink-soft);line-height:1.6;margin-top:6px;}
-  .notice-author{font-size:12px;color:var(--ink-faint);margin-top:10px;font-weight:500;}
+  .notice-title{font-weight:700;font-size:15.5px;color:var(--ink);}
+  .notice-body{font-size:13.5px;color:var(--ink-soft);line-height:1.6;margin-top:6px;}
+  .notice-author{font-size:11.5px;color:var(--ink-faint);margin-top:10px;font-weight:600;}
 
   .empty-state{
     text-align:center;padding:16px 0 0;color:var(--ink-faint);font-size:13.5px;
@@ -119,26 +145,27 @@
   @media (max-width:640px){
     .board-title{font-size:24px;}
     .cal-wrap{padding:18px;}
-    .cal-cell{min-height:80px;padding:6px 4px;}
-    .cal-chip{font-size:10.5px;padding:3px 5px;}
+    .cal-cell{min-height:76px;padding:6px 4px;}
+    .cal-chip{font-size:10px;padding:3px 5px;}
   }
 </style>
 </head>
 <body>
-<div class="wrap">
 
+<div class="wrap">
   <header class="board-head">
-    <h1 class="board-title">26F/W 수주 출고 스케줄</h1>
-    <div class="board-sub">대리점 안내용</div>
+    <h1 class="board-title">26F/W <span class="accent">수주 출고</span> 스케줄</h1>
+    <div><span class="board-sub">대리점 안내용</span></div>
     <div class="board-meta">최근 업데이트 2026.07.22</div>
   </header>
 
-  <div class="toolbar">
-    <input class="search-box" id="searchBox" type="text" placeholder="상품코드/품목 검색">
+  <div class="content">
+    <div class="toolbar">
+      <input class="search-box" id="searchBox" type="text" placeholder="상품코드/품목 검색">
+    </div>
+
+    <div id="mainView"></div>
   </div>
-
-  <div id="mainView"></div>
-
 </div>
 
 <script>
