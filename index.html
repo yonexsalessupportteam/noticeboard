@@ -142,6 +142,7 @@
     border-radius:8px;padding:6px 11px;letter-spacing:0.2px;
   }
   .notice-author{font-size:11.5px;color:var(--ink-faint);margin-top:10px;font-weight:600;}
+  .notice-note{font-size:12.5px;color:var(--amber);font-weight:700;margin-top:8px;}
 
   .update-note{
     font-size:13.5px;font-weight:700;color:#FFFFFF;background:#003087;
@@ -182,18 +183,33 @@
   .legend .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;}
   .legend .dot.done{background:#2E9AE0;}
   .legend .dot.wait{background:#C9D6E2;}
+  .filter-btn{
+    font-family:inherit;font-size:12px;font-weight:700;padding:7px 14px;border:none;
+    border-radius:16px;background:var(--surface);color:var(--ink-soft);cursor:pointer;
+    box-shadow:0 3px 10px rgba(20,90,160,0.08);transition:all .15s ease;
+  }
+  .filter-btn:hover{color:var(--teal-dark);}
+  .filter-btn.active{background:var(--teal);color:#fff;}
 
   /* Product status list */
   .prod-wrap{
     background:var(--surface);border:1px solid var(--border);border-radius:24px;
     padding:28px;box-shadow:0 10px 40px rgba(20,90,160,0.08);
   }
-  .prod-cat{margin-bottom:22px;}
+  .prod-cat{margin-bottom:12px;border:1px solid var(--border);border-radius:14px;overflow:hidden;}
   .prod-cat:last-child{margin-bottom:0;}
   .prod-cat-title{
-    font-size:13px;font-weight:800;color:var(--teal-dark);margin-bottom:10px;
-    padding-bottom:8px;border-bottom:1px solid var(--border);
+    font-size:13.5px;font-weight:800;color:var(--teal-dark);
+    padding:14px 16px;cursor:pointer;list-style:none;
+    display:flex;align-items:center;justify-content:space-between;
+    background:#F3F9FD;user-select:none;
   }
+  .prod-cat-title::-webkit-details-marker{display:none;}
+  .prod-cat-title::after{
+    content:'▾';font-size:11px;color:var(--ink-faint);transition:transform .15s ease;
+  }
+  .prod-cat[open] .prod-cat-title::after{transform:rotate(180deg);}
+  .prod-cat .prod-grid{padding:14px 16px;}
   .prod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;}
   .prod-card{
     background:#F3F9FD;border-radius:12px;padding:10px 12px;
@@ -209,6 +225,8 @@
   .prod-badge.wait{background:#E4EAF0;color:var(--ink-soft);}
   .prod-meta{font-size:11.5px;color:var(--ink-soft);margin-top:5px;font-weight:600;}
   .prod-eta{font-size:11px;color:var(--ink-faint);margin-top:2px;font-weight:600;}
+  .prod-ship-eta{font-size:12.5px;color:#C0142C;font-weight:800;margin-top:4px;}
+  .prod-note{font-size:11.5px;color:var(--amber);font-weight:700;margin-top:3px;}
 
 
   @media (max-width:640px){
@@ -254,8 +272,9 @@
           <div class="section-desc">초도 상품은 전 대리점 동일하게 출고됩니다. 상품코드로 검색하거나 아래 목록에서 확인하세요.</div>
         </div>
         <div class="legend">
-          <span><span class="dot done"></span>초도출고완료</span>
-          <span><span class="dot wait"></span>출고예정</span>
+          <button class="filter-btn active" id="filterAll">전체</button>
+          <button class="filter-btn" id="filterDone">초도출고완료</button>
+          <button class="filter-btn" id="filterWait">출고예정</button>
         </div>
       </div>
       <div id="productView"></div>
@@ -266,9 +285,11 @@
 
 <script>
 // 여기 배열만 직접 수정하면 출고 스케줄이 반영됩니다.
+// note는 선택사항입니다. 일정이 당겨지거나 밀릴 때 "7/29->7/24 당김" 처럼 적어두면
+// 출고캘린더 카드와 신상품 초도출고현황 카드 양쪽에 변경 이력으로 표시됩니다.
 const NOTICES = [
-  { id: 20, title: "게임웨어/캐쥬얼웨어 출고", body: "263TS011/263TS012/263TS035/263TS038/263TS039/263TS040/263TS044/263TS046/263TS048(전략점 전용)", author: "영업지원팀", date: "2026-07-29" },
-  { id: 21, title: "츄리닝 출고", body: "263WU001", author: "영업지원팀", date: "2026-07-30" },
+  { id: 20, title: "게임웨어/캐쥬얼웨어 출고", body: "263TS011/263TS012/263TS035/263TS038/263TS039/263TS040/263TS044/263TS046/263TS048(전략점 전용)", author: "영업지원팀", date: "2026-07-29", note: "" },
+  { id: 21, title: "츄리닝 출고", body: "263WU001", author: "영업지원팀", date: "2026-07-30", note: "" },
 ];
 
 // 신상품 초도 출고 현황: done을 true로 바꾸면 "초도출고완료"로 표시됩니다.
@@ -418,6 +439,7 @@ let calYear = _today.getFullYear();
 let calMonth = _today.getMonth() + 1; // 1~12
 let selectedDate = null;
 let searchTerm = "";
+let statusFilter = "all"; // all | done | wait
 
 function formatDate(d){
   const [y,m,day] = d.split("-");
@@ -427,10 +449,12 @@ function formatDate(d){
 function noticeCardHTML(n){
   const codes = n.body.split('/').map(c => c.trim()).filter(Boolean);
   const codeChips = codes.map(c => `<span class="code-chip">${c}</span>`).join('');
+  const noteHTML = n.note ? `<div class="notice-note">변경: ${n.note}</div>` : '';
   return `
     <div class="notice-card">
       <div class="notice-title">${n.title}</div>
       <div class="code-list">${codeChips}</div>
+      ${noteHTML}
       <div class="notice-author">${n.author} · ${n.date}</div>
     </div>`;
 }
@@ -545,14 +569,22 @@ function findCalendarNotice(code){
   return matched;
 }
 
+function formatShipDate(dateStr){
+  const [y,m,day] = dateStr.split('-');
+  return `${parseInt(m,10)}월 ${parseInt(day,10)}일`;
+}
+
 function productCardHTML(p){
   const badge = p.done
     ? `<span class="prod-badge done">초도출고완료</span>`
     : `<span class="prod-badge wait">출고예정</span>`;
   const calNotice = findCalendarNotice(p.code);
-  const etaText = calNotice
-    ? `${formatEta(calNotice.date)} · 출고캘린더 반영`
-    : formatEta(p.eta);
+  const shipEtaHTML = calNotice
+    ? `<div class="prod-ship-eta">출고 예정일 : ${formatShipDate(calNotice.date)}</div>`
+    : '';
+  const noteHTML = (calNotice && calNotice.note)
+    ? `<div class="prod-note">변경: ${calNotice.note}</div>`
+    : '';
   return `
     <div class="prod-card ${p.done ? 'done' : ''}">
       <div class="prod-top">
@@ -560,17 +592,20 @@ function productCardHTML(p){
         ${badge}
       </div>
       <div class="prod-meta">${p.color} · ${p.size}</div>
-      <div class="prod-eta">${etaText}</div>
+      <div class="prod-eta">${formatEta(p.eta)}</div>
+      ${shipEtaHTML}
+      ${noteHTML}
     </div>`;
 }
 
 function renderProducts(){
   const term = searchTerm.trim().toLowerCase();
   const list = PRODUCTS.filter(p =>
-    !term ||
-    p.code.toLowerCase().includes(term) ||
-    p.category.toLowerCase().includes(term) ||
-    p.color.toLowerCase().includes(term));
+    (!term ||
+      p.code.toLowerCase().includes(term) ||
+      p.category.toLowerCase().includes(term) ||
+      p.color.toLowerCase().includes(term)) &&
+    (statusFilter === 'all' || (statusFilter === 'done' ? p.done : !p.done)));
 
   if(list.length === 0){
     document.getElementById('productView').innerHTML = `<div class="prod-wrap"><div class="empty-state">검색 결과가 없습니다</div></div>`;
@@ -580,14 +615,27 @@ function renderProducts(){
   const byCat = {};
   list.forEach(p => { (byCat[p.category] = byCat[p.category] || []).push(p); });
 
+  const shouldOpen = term || statusFilter !== 'all';
   const catsHTML = Object.keys(byCat).map(cat => `
-    <div class="prod-cat">
-      <div class="prod-cat-title">${cat} (${byCat[cat].length})</div>
+    <details class="prod-cat" ${shouldOpen ? 'open' : ''}>
+      <summary class="prod-cat-title">${cat} (${byCat[cat].length})</summary>
       <div class="prod-grid">${byCat[cat].map(productCardHTML).join('')}</div>
-    </div>`).join('');
+    </details>`).join('');
 
   document.getElementById('productView').innerHTML = `<div class="prod-wrap">${catsHTML}</div>`;
 }
+
+function setStatusFilter(f){
+  statusFilter = f;
+  document.getElementById('filterAll').classList.toggle('active', f === 'all');
+  document.getElementById('filterDone').classList.toggle('active', f === 'done');
+  document.getElementById('filterWait').classList.toggle('active', f === 'wait');
+  renderProducts();
+}
+
+document.getElementById('filterAll').addEventListener('click', () => setStatusFilter('all'));
+document.getElementById('filterDone').addEventListener('click', () => setStatusFilter('done'));
+document.getElementById('filterWait').addEventListener('click', () => setStatusFilter('wait'));
 
 document.getElementById('searchBox').addEventListener('input', (e) => {
   searchTerm = e.target.value;
