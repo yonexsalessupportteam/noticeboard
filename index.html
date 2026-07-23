@@ -272,9 +272,9 @@
           <div class="section-desc">초도 상품은 전 대리점 동일하게 출고됩니다. 상품코드로 검색하거나 아래 목록에서 확인하세요.</div>
         </div>
         <div class="legend">
-          <button class="filter-btn active" id="filterAll">전체</button>
-          <button class="filter-btn" id="filterDone">초도출고완료</button>
+          <button class="filter-btn" id="filterConfirmed">출고예정일 확정</button>
           <button class="filter-btn" id="filterWait">출고예정</button>
+          <button class="filter-btn" id="filterDone">출고완료</button>
         </div>
       </div>
       <div id="productView"></div>
@@ -289,6 +289,7 @@
 // 출고캘린더 카드와 신상품 초도출고현황 카드 양쪽에 변경 이력으로 표시됩니다.
 const NOTICES = [
   { id: 20, title: "게임웨어/캐쥬얼웨어 출고", body: "263TS011/263TS012/263TS035/263TS038/263TS039/263TS040/263TS044/263TS046/263TS048(전략점 전용)", author: "영업지원팀", date: "2026-07-29", note: "" },
+  { id: 21, title: "츄리닝 출고", body: "263WU001", author: "영업지원팀", date: "2026-07-30", note: "" },
 ];
 
 // 신상품 초도 출고 현황: done을 true로 바꾸면 "초도출고완료"로 표시됩니다.
@@ -438,7 +439,7 @@ let calYear = _today.getFullYear();
 let calMonth = _today.getMonth() + 1; // 1~12
 let selectedDate = null;
 let searchTerm = "";
-let statusFilter = "all"; // all | done | wait
+let productFilter = null; // null | 'confirmed' | 'wait' | 'done'
 
 function formatDate(d){
   const [y,m,day] = d.split("-");
@@ -599,12 +600,18 @@ function productCardHTML(p){
 
 function renderProducts(){
   const term = searchTerm.trim().toLowerCase();
-  const list = PRODUCTS.filter(p =>
-    (!term ||
+  const list = PRODUCTS.filter(p => {
+    const matchesTerm = !term ||
       p.code.toLowerCase().includes(term) ||
       p.category.toLowerCase().includes(term) ||
-      p.color.toLowerCase().includes(term)) &&
-    (statusFilter === 'all' || (statusFilter === 'done' ? p.done : !p.done)));
+      p.color.toLowerCase().includes(term);
+    const isConfirmed = !!findCalendarNotice(p.code);
+    let matchesFilter = true;
+    if(productFilter === 'done') matchesFilter = p.done;
+    else if(productFilter === 'confirmed') matchesFilter = !p.done && isConfirmed;
+    else if(productFilter === 'wait') matchesFilter = !p.done && !isConfirmed;
+    return matchesTerm && matchesFilter;
+  });
 
   if(list.length === 0){
     document.getElementById('productView').innerHTML = `<div class="prod-wrap"><div class="empty-state">검색 결과가 없습니다</div></div>`;
@@ -614,7 +621,7 @@ function renderProducts(){
   const byCat = {};
   list.forEach(p => { (byCat[p.category] = byCat[p.category] || []).push(p); });
 
-  const shouldOpen = term || statusFilter !== 'all';
+  const shouldOpen = term || productFilter !== null;
   const catsHTML = Object.keys(byCat).map(cat => `
     <details class="prod-cat" ${shouldOpen ? 'open' : ''}>
       <summary class="prod-cat-title">${cat} (${byCat[cat].length})</summary>
@@ -624,17 +631,17 @@ function renderProducts(){
   document.getElementById('productView').innerHTML = `<div class="prod-wrap">${catsHTML}</div>`;
 }
 
-function setStatusFilter(f){
-  statusFilter = f;
-  document.getElementById('filterAll').classList.toggle('active', f === 'all');
-  document.getElementById('filterDone').classList.toggle('active', f === 'done');
-  document.getElementById('filterWait').classList.toggle('active', f === 'wait');
+function setProductFilter(f){
+  productFilter = (productFilter === f) ? null : f; // 같은 버튼 다시 누르면 전체 보기로
+  document.getElementById('filterConfirmed').classList.toggle('active', productFilter === 'confirmed');
+  document.getElementById('filterWait').classList.toggle('active', productFilter === 'wait');
+  document.getElementById('filterDone').classList.toggle('active', productFilter === 'done');
   renderProducts();
 }
 
-document.getElementById('filterAll').addEventListener('click', () => setStatusFilter('all'));
-document.getElementById('filterDone').addEventListener('click', () => setStatusFilter('done'));
-document.getElementById('filterWait').addEventListener('click', () => setStatusFilter('wait'));
+document.getElementById('filterConfirmed').addEventListener('click', () => setProductFilter('confirmed'));
+document.getElementById('filterWait').addEventListener('click', () => setProductFilter('wait'));
+document.getElementById('filterDone').addEventListener('click', () => setProductFilter('done'));
 
 document.getElementById('searchBox').addEventListener('input', (e) => {
   searchTerm = e.target.value;
