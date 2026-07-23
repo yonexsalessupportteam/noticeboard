@@ -746,7 +746,7 @@ function renderProducts(){
       const bodyHTML = renderCategoryAccordions(byGroup[g]);
       return `
         <div class="prod-group">
-          <div class="prod-group-title">${g === '세양' ? '세양 (국내 생산)' : '수입 상품'} <span class="prod-group-count">${byGroup[g].length}</span></div>
+          <div class="prod-group-title">${g === '세양' ? '세양의류' : '수입의류'} <span class="prod-group-count">${byGroup[g].length}</span></div>
           ${bodyHTML}
         </div>`;
     }).join('');
