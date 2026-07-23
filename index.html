@@ -746,18 +746,23 @@ function renderProducts(){
   const groupsHTML = groupOrder
     .filter(g => byGroup[g] && byGroup[g].length > 0)
     .map(g => {
-      const byCollection = {};
-      const collectionOrder = [];
-      byGroup[g].forEach(p => {
-        const c = p.collection || '기타';
-        if(!byCollection[c]){ byCollection[c] = []; collectionOrder.push(c); }
-        byCollection[c].push(p);
-      });
-      const bodyHTML = collectionOrder.map(c => `
+      let bodyHTML;
+      if(g === '수입'){
+        const byCollection = {};
+        const collectionOrder = [];
+        byGroup[g].forEach(p => {
+          const c = p.collection || '기타';
+          if(!byCollection[c]){ byCollection[c] = []; collectionOrder.push(c); }
+          byCollection[c].push(p);
+        });
+        bodyHTML = collectionOrder.map(c => `
             <details class="team-block" ${shouldOpen ? 'open' : ''}>
               <summary class="team-block-title">${c} <span class="prod-group-count">${byCollection[c].length}</span></summary>
               ${renderCategoryAccordions(byCollection[c])}
             </details>`).join('');
+      } else {
+        bodyHTML = renderCategoryAccordions(byGroup[g]);
+      }
       return `
         <div class="prod-group">
           <div class="prod-group-title">${g === '세양' ? '세양의류' : '수입의류'} <span class="prod-group-count">${byGroup[g].length}</span></div>
