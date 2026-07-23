@@ -77,6 +77,12 @@
   }
   .search-box::placeholder{color:var(--ink-faint);}
   .search-box:focus{outline:none;box-shadow:0 0 0 3px var(--teal-light), 0 6px 20px rgba(20,90,160,0.10);}
+  .toolbar{gap:12px;align-items:center;}
+  .change-legend{
+    display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;
+    color:#C0142C;background:#FDEBEC;padding:8px 14px;border-radius:20px;white-space:nowrap;
+  }
+  .change-dot{width:7px;height:7px;border-radius:50%;background:#C0142C;display:inline-block;}
 
   /* Calendar */
   .cal-wrap{
@@ -285,6 +291,7 @@
 
     <div class="toolbar">
       <input class="search-box" id="searchBox" type="text" placeholder="상품코드/품목 검색">
+      <div class="change-legend" id="changeLegend"><span class="change-dot"></span>일정 변경됨</div>
     </div>
 
     <div class="tab-panel active" id="tabPanelCal">
@@ -315,7 +322,7 @@
 // note는 선택사항입니다. 일정이 당겨지거나 밀릴 때 "7/29->7/24 당김" 처럼 적어두면
 // 출고캘린더 카드와 신상품 초도출고현황 카드 양쪽에 변경 이력으로 표시됩니다.
 const NOTICES = [
-  { id: 20, title: "게임웨어/캐쥬얼웨어 출고", body: "263TS011/263TS012/263TS035/263TS038/263TS039/263TS040/263TS044/263TS046/263TS048(전략점 전용)", author: "영업지원팀", date: "2026-07-28", note: "변경: 7/29→7/24 당김" },
+  { id: 20, title: "게임웨어/캐쥬얼웨어 출고", body: "263TS011/263TS012/263TS035/263TS038/263TS039/263TS040/263TS044/263TS046/263TS048(전략점 전용)", author: "영업지원팀", date: "2026-07-29", note: "" },
 ];
 
 // 신상품 초도 출고 현황: done을 true로 바꾸면 "초도출고완료"로 표시됩니다.
@@ -704,6 +711,7 @@ document.getElementById('tabBtnCal').addEventListener('click', () => {
   document.getElementById('tabBtnProd').classList.remove('active');
   document.getElementById('tabPanelCal').classList.add('active');
   document.getElementById('tabPanelProd').classList.remove('active');
+  document.getElementById('changeLegend').style.display = 'flex';
 });
 
 document.getElementById('tabBtnProd').addEventListener('click', () => {
@@ -711,6 +719,7 @@ document.getElementById('tabBtnProd').addEventListener('click', () => {
   document.getElementById('tabBtnCal').classList.remove('active');
   document.getElementById('tabPanelProd').classList.add('active');
   document.getElementById('tabPanelCal').classList.remove('active');
+  document.getElementById('changeLegend').style.display = 'none';
 });
 
 renderCalendar();
