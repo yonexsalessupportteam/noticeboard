@@ -156,6 +156,61 @@
     text-align:center;padding:16px 0 0;color:var(--ink-faint);font-size:13.5px;
   }
 
+  /* Tabs */
+  .tabbar{
+    display:flex;justify-content:center;gap:8px;margin-bottom:20px;
+  }
+  .tab-btn{
+    font-family:inherit;font-size:14px;font-weight:700;padding:10px 22px;
+    border:none;border-radius:20px;background:var(--surface);color:var(--ink-soft);
+    cursor:pointer;box-shadow:0 4px 14px rgba(20,90,160,0.08);transition:all .15s ease;
+  }
+  .tab-btn:hover{color:var(--teal-dark);}
+  .tab-btn.active{background:var(--teal);color:#fff;box-shadow:0 6px 18px rgba(46,154,224,0.35);}
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;}
+
+  /* Section divider */
+  .section-gap{margin-top:32px;}
+  .section-head{
+    display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+    margin-bottom:14px;flex-wrap:wrap;
+  }
+  .section-title{font-weight:800;font-size:18px;letter-spacing:-0.3px;color:var(--ink);}
+  .section-desc{font-size:12.5px;color:var(--ink-soft);font-weight:500;}
+  .legend{display:flex;gap:10px;font-size:12px;color:var(--ink-soft);font-weight:600;}
+  .legend .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;}
+  .legend .dot.done{background:#2E9AE0;}
+  .legend .dot.wait{background:#C9D6E2;}
+
+  /* Product status list */
+  .prod-wrap{
+    background:var(--surface);border:1px solid var(--border);border-radius:24px;
+    padding:28px;box-shadow:0 10px 40px rgba(20,90,160,0.08);
+  }
+  .prod-cat{margin-bottom:22px;}
+  .prod-cat:last-child{margin-bottom:0;}
+  .prod-cat-title{
+    font-size:13px;font-weight:800;color:var(--teal-dark);margin-bottom:10px;
+    padding-bottom:8px;border-bottom:1px solid var(--border);
+  }
+  .prod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;}
+  .prod-card{
+    background:#F3F9FD;border-radius:12px;padding:10px 12px;
+    border:1.5px solid transparent;
+  }
+  .prod-card.done{background:var(--teal-light);border-color:var(--teal);}
+  .prod-top{display:flex;align-items:center;justify-content:space-between;gap:6px;}
+  .prod-code{font-weight:800;font-size:13.5px;color:var(--ink);letter-spacing:-0.1px;}
+  .prod-badge{
+    font-size:10.5px;font-weight:800;padding:3px 8px;border-radius:20px;white-space:nowrap;
+  }
+  .prod-badge.done{background:var(--teal);color:#fff;}
+  .prod-badge.wait{background:#E4EAF0;color:var(--ink-soft);}
+  .prod-meta{font-size:11.5px;color:var(--ink-soft);margin-top:5px;font-weight:600;}
+  .prod-eta{font-size:11px;color:var(--ink-faint);margin-top:2px;font-weight:600;}
+
+
   @media (max-width:640px){
     .board-title{font-size:24px;}
     .cal-wrap{padding:18px;}
@@ -178,19 +233,185 @@
 
   <div class="content">
     <div class="update-note">* 입고일정 변경, 물류 상황에 따라 변경 될 수 있는점 참고 부탁드립니다</div>
+
+    <div class="tabbar">
+      <button class="tab-btn active" id="tabBtnCal">출고 캘린더</button>
+      <button class="tab-btn" id="tabBtnProd">신상품 초도 출고 현황</button>
+    </div>
+
     <div class="toolbar">
       <input class="search-box" id="searchBox" type="text" placeholder="상품코드/품목 검색">
     </div>
 
-    <div id="mainView"></div>
+    <div class="tab-panel active" id="tabPanelCal">
+      <div id="mainView"></div>
+    </div>
+
+    <div class="tab-panel" id="tabPanelProd">
+      <div class="section-head">
+        <div>
+          <div class="section-title">신상품 초도 출고 현황</div>
+          <div class="section-desc">초도 상품은 전 대리점 동일하게 출고됩니다. 상품코드로 검색하거나 아래 목록에서 확인하세요.</div>
+        </div>
+        <div class="legend">
+          <span><span class="dot done"></span>초도출고완료</span>
+          <span><span class="dot wait"></span>출고예정</span>
+        </div>
+      </div>
+      <div id="productView"></div>
+    </div>
   </div>
 </div>
+
 
 <script>
 // 여기 배열만 직접 수정하면 출고 스케줄이 반영됩니다.
 const NOTICES = [
   { id: 20, title: "게임웨어/캐쥬얼웨어 출고", body: "263TS011/263TS012/263TS035/263TS038/263TS039/263TS040/263TS044/263TS046/263TS048(전략점 전용)", author: "영업지원팀", date: "2026-07-29" },
   { id: 21, title: "츄리닝 출고", body: "263WU001", author: "영업지원팀", date: "2026-07-30" },
+];
+
+// 신상품 초도 출고 현황: done을 true로 바꾸면 "초도출고완료"로 표시됩니다.
+const PRODUCTS = [
+  { no:1, category:"반팔티(게임웨어)", code:"263TS001M", size:"95~120", color:"BG", initial:2460, eta:"2026-08-14", done:false },
+  { no:2, category:"반팔티(게임웨어)", code:"263TS002F", size:"80~100", color:"BG", initial:1640, eta:"2026-08-14", done:false },
+  { no:3, category:"반팔티(게임웨어)", code:"263TS003M", size:"95~120", color:"BK", initial:2880, eta:"2026-07-29", done:false },
+  { no:4, category:"반팔티(게임웨어)", code:"263TS004F", size:"85~100", color:"BK", initial:1920, eta:"2026-07-29", done:false },
+  { no:5, category:"반팔티(게임웨어)", code:"263TS005M", size:"95~120", color:"WH", initial:1920, eta:"2026-08-10", done:false },
+  { no:6, category:"반팔티(게임웨어)", code:"263TS006F", size:"85~100", color:"WH", initial:1280, eta:"2026-08-10", done:false },
+  { no:7, category:"반팔티(게임웨어)", code:"263TS007M", size:"95~120", color:"WH", initial:1890, eta:"2026-08-13", done:false },
+  { no:8, category:"반팔티(게임웨어)", code:"263TS008F", size:"80~100", color:"WH", initial:1260, eta:"2026-08-13", done:false },
+  { no:9, category:"반팔티(게임웨어)", code:"263TS009M", size:"95~120", color:"PI", initial:1920, eta:"2026-08-14", done:false },
+  { no:10, category:"반팔티(게임웨어)", code:"263TS010F", size:"85~100", color:"PI", initial:1280, eta:"2026-08-14", done:false },
+  { no:11, category:"반팔티(게임웨어)", code:"263TS011M", size:"95~120", color:"BK", initial:1170, eta:"2026-07-21", done:false },
+  { no:12, category:"반팔티(게임웨어)", code:"263TS012F", size:"85~100", color:"BK", initial:780, eta:"2026-07-21", done:false },
+  { no:13, category:"반팔티(게임웨어)", code:"263TS013M", size:"95~120", color:"DN", initial:1170, eta:"2026-08-14", done:false },
+  { no:14, category:"반팔티(게임웨어)", code:"263TS014F", size:"85~100", color:"DN", initial:780, eta:"2026-08-14", done:false },
+  { no:15, category:"반팔티(게임웨어)", code:"263TS015M", size:"95~120", color:"WH", initial:1140, eta:"2026-07-31", done:false },
+  { no:16, category:"반팔티(게임웨어)", code:"263TS016F", size:"85~100", color:"WH", initial:760, eta:"2026-07-31", done:false },
+  { no:17, category:"반팔티(게임웨어)", code:"263TS057M", size:"95~120", color:"BK", initial:600, eta:"2026-08-07", done:false },
+  { no:18, category:"반팔티(게임웨어)", code:"263TS058F", size:"85~100", color:"BK", initial:400, eta:"2026-08-07", done:false },
+  { no:19, category:"반팔티(게임웨어)", code:"263TS017M", size:"95~120", color:"BK", initial:2880, eta:"2026-07-20", done:false },
+  { no:20, category:"반팔티(게임웨어)", code:"263TS018F", size:"85~100", color:"BK", initial:1920, eta:"2026-07-20", done:false },
+  { no:21, category:"반팔티(게임웨어)", code:"263TS019M", size:"95~120", color:"DG", initial:2220, eta:"2026-08-11", done:false },
+  { no:22, category:"반팔티(게임웨어)", code:"263TS020F", size:"85~100", color:"DG", initial:1480, eta:"2026-08-11", done:false },
+  { no:23, category:"반팔티(게임웨어)", code:"263TS021M", size:"95~120", color:"BK", initial:2340, eta:"2026-08-07", done:false },
+  { no:24, category:"반팔티(게임웨어)", code:"263TS022F", size:"80~100", color:"BK", initial:1560, eta:"2026-08-07", done:false },
+  { no:25, category:"반팔티(게임웨어)", code:"263TS023M", size:"95~120", color:"BK", initial:1170, eta:"2026-07-23", done:false },
+  { no:26, category:"반팔티(게임웨어)", code:"263TS024F", size:"85~100", color:"BK", initial:780, eta:"2026-07-23", done:false },
+  { no:27, category:"반팔티(게임웨어)", code:"263TS025M", size:"95~120", color:"WH", initial:1140, eta:"2026-07-29", done:false },
+  { no:28, category:"반팔티(게임웨어)", code:"263TS026F", size:"85~100", color:"WH", initial:760, eta:"2026-07-29", done:false },
+  { no:29, category:"반팔티(게임웨어)", code:"263TS027M", size:"95~120", color:"MN", initial:1140, eta:"2026-07-29", done:false },
+  { no:30, category:"반팔티(게임웨어)", code:"263TS028F", size:"85~100", color:"MN", initial:760, eta:"2026-07-29", done:false },
+  { no:31, category:"반팔티(게임웨어)", code:"263TS029M", size:"95~120", color:"PK", initial:1800, eta:"2026-08-07", done:false },
+  { no:32, category:"반팔티(게임웨어)", code:"263TS030F", size:"80~100", color:"PK", initial:1200, eta:"2026-08-07", done:false },
+  { no:33, category:"반팔티(게임웨어)", code:"263TS029M", size:"95~120", color:"BL", initial:1200, eta:"2026-08-11", done:false },
+  { no:34, category:"반팔티(게임웨어)", code:"263TS030F", size:"85~100", color:"BL", initial:800, eta:"2026-08-11", done:false },
+  { no:35, category:"반팔티(게임웨어)", code:"263TS031M", size:"95~120", color:"PB", initial:1200, eta:"2026-07-29", done:false },
+  { no:36, category:"반팔티(게임웨어)", code:"263TS032F", size:"85~100", color:"PB", initial:800, eta:"2026-07-29", done:false },
+  { no:37, category:"반팔티(게임웨어)", code:"263TS031M", size:"95~120", color:"MT", initial:900, eta:"2026-07-29", done:false },
+  { no:38, category:"반팔티(게임웨어)", code:"263TS032F", size:"85~100", color:"MT", initial:600, eta:"2026-07-29", done:false },
+  { no:39, category:"민소매(게임웨어)", code:"263TR001M", size:"95~110", color:"BG", initial:850, eta:"2026-08-14", done:false },
+  { no:40, category:"민소매(게임웨어)", code:"263TR002M", size:"95~110", color:"BK", initial:850, eta:"2026-08-13", done:false },
+  { no:41, category:"반팔티(캐주얼)", code:"263TS033U", size:"85~110", color:"BK", initial:5400, eta:"2026-07-22", done:false },
+  { no:42, category:"반팔티(캐주얼)", code:"263TS034U", size:"85~110", color:"BA", initial:1800, eta:"2026-08-03", done:false },
+  { no:43, category:"반팔티(캐주얼)", code:"263TS035U", size:"85~110", color:"WH", initial:2200, eta:"2026-07-09", done:false },
+  { no:44, category:"반팔티(캐주얼)", code:"263TS036U", size:"85~110", color:"BR", initial:1500, eta:"2026-07-24", done:false },
+  { no:45, category:"반팔티(캐주얼)", code:"263TS037U", size:"85~110", color:"BK", initial:3800, eta:"2026-08-03", done:false },
+  { no:46, category:"반팔티(캐주얼)", code:"263TS038U", size:"85~110", color:"WH", initial:1900, eta:"2026-07-13", done:false },
+  { no:47, category:"반팔티(캐주얼)", code:"263TS039U", size:"85~110", color:"DN", initial:3500, eta:"2026-07-14", done:false },
+  { no:48, category:"반팔티(캐주얼)", code:"263TS040U", size:"85~110", color:"IV", initial:2200, eta:"2026-07-15", done:false },
+  { no:49, category:"반팔티(캐주얼)", code:"263TS041U", size:"85~110", color:"DN", initial:3700, eta:"2026-07-22", done:false },
+  { no:50, category:"반팔티(캐주얼)", code:"263TS042U", size:"85~110", color:"GY", initial:2200, eta:"2026-07-29", done:false },
+  { no:51, category:"반팔티(캐주얼)", code:"263TS043U", size:"85~110", color:"GC", initial:2100, eta:"2026-07-23", done:false },
+  { no:52, category:"반팔티(캐주얼)", code:"263TS044U", size:"85~110", color:"PB", initial:2600, eta:"2026-07-16", done:false },
+  { no:53, category:"반팔티(캐주얼)", code:"263TS045U", size:"85~110", color:"GY", initial:2100, eta:"2026-08-07", done:false },
+  { no:54, category:"반팔티(캐주얼)", code:"263TS046U(전략점 전용)", size:"85~110", color:"BK", initial:1000, eta:"2026-07-09", done:false },
+  { no:55, category:"반팔티(캐주얼)", code:"263TS047U(전략점 전용)", size:"85~110", color:"PB", initial:1000, eta:"2026-08-07", done:false },
+  { no:56, category:"반팔티(캐주얼)", code:"263TS048U(전략점 전용)", size:"85~110", color:"TB", initial:1000, eta:"2026-07-14", done:false },
+  { no:57, category:"반팔티(캐주얼)", code:"263TS049U(전략점 전용)", size:"85~110", color:"OL", initial:1000, eta:"2026-07-29", done:false },
+  { no:58, category:"카라티(캐주얼)", code:"263TS055U", size:"85~110", color:"DC", initial:700, eta:"2026-07-31", done:false },
+  { no:59, category:"긴팔티(캐주얼)", code:"263TL001U", size:"85~110", color:"GY", initial:1250, eta:"2026-07-31", done:false },
+  { no:60, category:"긴팔티(캐주얼)", code:"263TL002U", size:"85~110", color:"BK", initial:1150, eta:"2026-08-14", done:false },
+  { no:61, category:"맨투맨(캐주얼)", code:"263TL003U", size:"85~110", color:"MG", initial:800, eta:"2026-08-26", done:false },
+  { no:62, category:"맨투맨(캐주얼)", code:"263TL004U", size:"85~110", color:"MW", initial:600, eta:"2026-08-07", done:false },
+  { no:63, category:"후드티(캐주얼)", code:"263TH001U", size:"85~110", color:"BG", initial:750, eta:"2026-08-24", done:false },
+  { no:64, category:"후드티(캐주얼)", code:"263TH002U", size:"85~110", color:"BK", initial:630, eta:"2026-08-28", done:false },
+  { no:65, category:"후드집업(캐주얼)", code:"263TH003U", size:"85~110", color:"SC", initial:930, eta:"2026-08-28", done:false },
+  { no:66, category:"반바지", code:"263PH001M", size:"95~110", color:"DG", initial:1320, eta:"2026-07-07", done:false },
+  { no:67, category:"반바지", code:"263PH002F", size:"85~100", color:"DG", initial:880, eta:"2026-07-07", done:false },
+  { no:68, category:"반바지", code:"263PH001M", size:"95~110", color:"BK", initial:1380, eta:"2026-07-07", done:false },
+  { no:69, category:"반바지", code:"263PH002F", size:"85~100", color:"BK", initial:920, eta:"2026-07-07", done:false },
+  { no:70, category:"긴바지", code:"263PL001U", size:"85~110", color:"MW", initial:550, eta:"2026-08-07", done:false },
+  { no:71, category:"긴바지", code:"263PL002U", size:"85~110", color:"BK", initial:950, eta:"2026-08-31", done:false },
+  { no:72, category:"츄상의(우븐)", code:"263WU001M", size:"95~120", color:"BK", initial:1140, eta:"2026-08-21", done:false },
+  { no:73, category:"츄상의(우븐)", code:"263WU002F", size:"85~100", color:"BK", initial:760, eta:"2026-08-21", done:false },
+  { no:74, category:"츄상의(우븐)", code:"263WU003U", size:"80~110", color:"MV", initial:2000, eta:"2026-08-31", done:false },
+  { no:75, category:"츄상의(우븐퀄팅)", code:"263WU005M", size:"95~120", color:"DC", initial:1140, eta:"2026-09-18", done:false },
+  { no:76, category:"츄상의(우븐퀄팅)", code:"263WU006F", size:"85~100", color:"DC", initial:760, eta:"2026-09-18", done:false },
+  { no:77, category:"츄상의(니트패딩)", code:"263WU007M", size:"95~120", color:"BK", initial:1440, eta:"2026-09-18", done:false },
+  { no:78, category:"츄상의(니트패딩)", code:"263WU008F", size:"85~100", color:"BK", initial:960, eta:"2026-09-18", done:false },
+  { no:79, category:"츄상의(니트)", code:"263WU009M", size:"95~120", color:"DN", initial:600, eta:"2026-08-31", done:false },
+  { no:80, category:"츄상의(니트)", code:"263WU010F", size:"85~100", color:"DN", initial:400, eta:"2026-08-31", done:false },
+  { no:81, category:"츄하의(우븐)", code:"263WP001M", size:"95~120", color:"BK", initial:840, eta:"2026-08-07", done:false },
+  { no:82, category:"츄하의(우븐)", code:"263WP002F", size:"85~100", color:"BK", initial:560, eta:"2026-08-07", done:false },
+  { no:83, category:"츄하의(우븐)", code:"263WP003U", size:"80~110", color:"MV", initial:2000, eta:"2026-08-31", done:false },
+  { no:84, category:"츄하의(니트)", code:"263WP005M", size:"95~120", color:"BK", initial:1170, eta:"2026-09-18", done:false },
+  { no:85, category:"츄하의(니트)", code:"263WP006F", size:"85~100", color:"BK", initial:780, eta:"2026-09-18", done:false },
+  { no:86, category:"츄하의(니트)", code:"263WP007M", size:"95~120", color:"BK", initial:1470, eta:"2026-09-18", done:false },
+  { no:87, category:"츄하의(니트)", code:"263WP008F", size:"85~100", color:"BK", initial:980, eta:"2026-09-18", done:false },
+  { no:88, category:"츄하의(니트기모)", code:"263WP009M", size:"95~120", color:"DN", initial:660, eta:"2026-08-31", done:false },
+  { no:89, category:"츄하의(니트기모)", code:"263WP010F", size:"85~100", color:"DN", initial:440, eta:"2026-08-31", done:false },
+  { no:90, category:"아노락", code:"263JJ001U", size:"85~110", color:"WH", initial:1950, eta:"2026-08-31", done:false },
+  { no:91, category:"아노락", code:"263JJ002U", size:"85~110", color:"WH", initial:1350, eta:"2026-08-31", done:false },
+  { no:92, category:"아노락", code:"263JJ003U", size:"85~110", color:"BK", initial:1800, eta:"2026-08-31", done:false },
+  { no:93, category:"아노락", code:"263JJ004U", size:"85~110", color:"CC", initial:1350, eta:"2026-08-31", done:false },
+  { no:94, category:"자켓", code:"263JJ005U", size:"85~110", color:"BK", initial:3000, eta:"2026-08-31", done:false },
+  { no:95, category:"자켓", code:"263JJ006U", size:"85~110", color:"DC", initial:930, eta:"2026-08-31", done:false },
+  { no:96, category:"자켓", code:"263JJ007U", size:"85~110", color:"PB", initial:1500, eta:"2026-08-31", done:false },
+  { no:97, category:"자켓", code:"263JJ008U", size:"85~110", color:"MG", initial:950, eta:"2026-09-30", done:false },
+  { no:98, category:"자켓", code:"263JJ009U", size:"85~110", color:"BK", initial:1250, eta:"2026-09-30", done:false },
+  { no:99, category:"경량패딩", code:"263JP001U", size:"85~110", color:"SN", initial:750, eta:"2026-09-30", done:false },
+  { no:100, category:"경량패딩", code:"263JP002U", size:"85~110", color:"BK", initial:900, eta:"2026-09-30", done:false },
+  { no:101, category:"숏패딩", code:"263JP003U", size:"85~110", color:"KG", initial:1300, eta:"2026-10-30", done:false },
+  { no:102, category:"롱패딩", code:"263JC001U", size:"85~110", color:"DC", initial:600, eta:"2026-10-30", done:false },
+  { no:103, category:"패딩조끼", code:"263JV001U", size:"85~110", color:"DC", initial:800, eta:"2026-10-30", done:false },
+  { no:104, category:"이지웨어반팔", code:"269TR011M", size:"95~110", color:"BK", initial:1500, eta:"2026-08-14", done:false },
+  { no:105, category:"이지웨어반팔", code:"269TR012F", size:"85~100", color:"BK", initial:1000, eta:"2026-08-14", done:false },
+  { no:106, category:"이지웨어반팔", code:"269TR011M", size:"95~110", color:"DN", initial:1320, eta:"2026-08-14", done:false },
+  { no:107, category:"이지웨어반팔", code:"269TR012F", size:"85~100", color:"DN", initial:880, eta:"2026-08-14", done:false },
+  { no:108, category:"이지웨어반팔", code:"269TR013M", size:"95~110", color:"BK", initial:2940, eta:"2026-07-13", done:false },
+  { no:109, category:"이지웨어반팔", code:"269TR014F", size:"85~100", color:"BK", initial:1960, eta:"2026-07-16", done:false },
+  { no:110, category:"이지웨어반팔", code:"269TR015M", size:"95~110", color:"MN", initial:2400, eta:"2026-07-21", done:false },
+  { no:111, category:"이지웨어반팔", code:"269TR016F", size:"85~100", color:"MN", initial:1600, eta:"2026-07-21", done:false },
+  { no:112, category:"이지웨어긴팔", code:"269TL001M", size:"95~110", color:"BK", initial:1410, eta:"2026-08-14", done:false },
+  { no:113, category:"이지웨어긴팔", code:"269TL002F", size:"85~100", color:"BK", initial:940, eta:"2026-08-14", done:false },
+  { no:114, category:"이지웨어긴팔", code:"269TL001M", size:"95~110", color:"NV", initial:1260, eta:"2026-08-14", done:false },
+  { no:115, category:"이지웨어긴팔", code:"269TL002F", size:"85~100", color:"NV", initial:840, eta:"2026-08-14", done:false },
+  { no:116, category:"반팔티(온라인)", code:"263TS050U(온라인전용)", size:"85~110", color:"WH", initial:800, eta:"2026-07-16", done:false },
+  { no:117, category:"반팔티(온라인)", code:"263TS051U(온라인전용)", size:"85~110", color:"AP", initial:600, eta:"2026-07-22", done:false },
+  { no:118, category:"반팔티(온라인)", code:"263TS052U(온라인전용)", size:"85~110", color:"PI", initial:600, eta:"2026-07-27", done:false },
+  { no:119, category:"반팔티(온라인)", code:"263TS053U(온라인전용)", size:"85~110", color:"BK", initial:1000, eta:"2026-08-04", done:false },
+  { no:120, category:"이지웨어반팔(온라인)", code:"263TS054U(온라인전용)", size:"85~110", color:"BK", initial:1500, eta:"2026-07-29", done:false },
+  { no:121, category:"이지웨어반팔(온라인)", code:"263TS054U(온라인전용)", size:"85~110", color:"MN", initial:1500, eta:"2026-07-29", done:false },
+  { no:122, category:"2026 아시안게임 SPOT", code:"269TS029M", size:"95~120", color:"WH", initial:1200, eta:"2026-08-21", done:false },
+  { no:123, category:"2026 아시안게임 SPOT", code:"269TS030F", size:"85~100", color:"WH", initial:800, eta:"2026-08-21", done:false },
+  { no:124, category:"2026 아시안게임 SPOT", code:"269TS031M", size:"95~120", color:"WH", initial:1320, eta:"2026-08-21", done:false },
+  { no:125, category:"2026 아시안게임 SPOT", code:"269TS032F", size:"85~100", color:"WH", initial:880, eta:"2026-08-21", done:false },
+  { no:126, category:"2026 아시안게임 SPOT", code:"269JJ004U", size:"85~110", color:"WH", initial:1900, eta:"2026-09-11", done:false },
+  { no:127, category:"25주년 SPOT", code:"269JJ005U", size:"85~110", color:"WH", initial:2270, eta:"2026-09-18", done:false },
+  { no:128, category:"압박양말(남)", code:"269SN007M", size:"FREE", color:"WH", initial:5000, eta:"2026-08-28", done:false },
+  { no:129, category:"압박양말(여)", code:"269SN008F", size:"FREE", color:"WH", initial:3000, eta:"2026-08-28", done:false },
+  { no:130, category:"논슬립양말(남)", code:"269SN009M(전판 논슬립)", size:"FREE", color:"WH", initial:2000, eta:"2026-08-28", done:false },
+  { no:131, category:"논슬립양말(여)", code:"269SN010F(전판 논슬립)", size:"FREE", color:"WH", initial:1000, eta:"2026-08-28", done:false },
+  { no:132, category:"미니크로스백", code:"269BA027U\n(미니크로스백-대회납품용)", size:"FREE", color:"BK", initial:null, eta:null, done:false },
+  { no:133, category:"신발주머니", code:"269BA028U\n(대회납품용-신발주머니)", size:"FREE", color:"NV", initial:null, eta:null, done:false },
+  { no:134, category:"슬링백", code:"269BA029U", size:"FREE", color:"GY", initial:700, eta:"2026-08-21", done:false },
+  { no:135, category:"미니크로스백", code:"269BA031U\n(미니크로스백-대회납품용)", size:"FREE", color:"BK", initial:3000, eta:"2026-08-25", done:false },
+  { no:136, category:"신발탈취제(2개입) ", code:"269AA001U", size:"FREE", color:"BL", initial:3000, eta:"2026-08-12", done:false },
+  { no:137, category:"햄스트링보호대", code:"269SP006U\n(햄스트링보호대)", size:"S,M,L", color:"BK", initial:1500, eta:"2026-08-31", done:false },
+  { no:138, category:"헤어밴드", code:"269BN006U", size:"FREE", color:"LC", initial:3500, eta:"2026-08-04", done:false },
+  { no:139, category:"헤어밴드", code:"269BN006U", size:"FREE", color:"IB", initial:3500, eta:"2026-08-04", done:false },
 ];
 const _today = new Date();
 let calYear = _today.getFullYear();
@@ -299,12 +520,98 @@ function shiftMonth(delta){
   renderCalendar();
 }
 
+function formatEta(eta){
+  if(!eta) return '입고예정일 미정';
+  const [y,m,day] = eta.split('-');
+  return `${m}월 ${day}일 입고예정`;
+}
+
+// 출고캘린더(NOTICES)에 등록된 상품코드를 찾아, 있으면 그 날짜를 우선 사용
+function normalizeCode(s){
+  return String(s || '').replace(/\(.*?\)/g, '').replace(/\s+/g, '').toUpperCase();
+}
+function codesMatch(noticeToken, productCode){
+  const a = normalizeCode(noticeToken);
+  const b = normalizeCode(productCode);
+  if(!a || !b) return false;
+  return b.startsWith(a) || a.startsWith(b);
+}
+function findCalendarNotice(code){
+  let matched = null;
+  NOTICES.forEach(n => {
+    const tokens = n.body.split('/').map(s => s.trim());
+    if(tokens.some(t => codesMatch(t, code))) matched = n; // 배열상 나중에 나오는(최근 등록된) 것을 우선
+  });
+  return matched;
+}
+
+function productCardHTML(p){
+  const badge = p.done
+    ? `<span class="prod-badge done">초도출고완료</span>`
+    : `<span class="prod-badge wait">출고예정</span>`;
+  const calNotice = findCalendarNotice(p.code);
+  const etaText = calNotice
+    ? `${formatEta(calNotice.date)} · 출고캘린더 반영`
+    : formatEta(p.eta);
+  return `
+    <div class="prod-card ${p.done ? 'done' : ''}">
+      <div class="prod-top">
+        <div class="prod-code">${p.code}</div>
+        ${badge}
+      </div>
+      <div class="prod-meta">${p.color} · ${p.size}</div>
+      <div class="prod-eta">${etaText}</div>
+    </div>`;
+}
+
+function renderProducts(){
+  const term = searchTerm.trim().toLowerCase();
+  const list = PRODUCTS.filter(p =>
+    !term ||
+    p.code.toLowerCase().includes(term) ||
+    p.category.toLowerCase().includes(term) ||
+    p.color.toLowerCase().includes(term));
+
+  if(list.length === 0){
+    document.getElementById('productView').innerHTML = `<div class="prod-wrap"><div class="empty-state">검색 결과가 없습니다</div></div>`;
+    return;
+  }
+
+  const byCat = {};
+  list.forEach(p => { (byCat[p.category] = byCat[p.category] || []).push(p); });
+
+  const catsHTML = Object.keys(byCat).map(cat => `
+    <div class="prod-cat">
+      <div class="prod-cat-title">${cat} (${byCat[cat].length})</div>
+      <div class="prod-grid">${byCat[cat].map(productCardHTML).join('')}</div>
+    </div>`).join('');
+
+  document.getElementById('productView').innerHTML = `<div class="prod-wrap">${catsHTML}</div>`;
+}
+
 document.getElementById('searchBox').addEventListener('input', (e) => {
   searchTerm = e.target.value;
   renderCalendar();
+  renderProducts();
+});
+
+document.getElementById('tabBtnCal').addEventListener('click', () => {
+  document.getElementById('tabBtnCal').classList.add('active');
+  document.getElementById('tabBtnProd').classList.remove('active');
+  document.getElementById('tabPanelCal').classList.add('active');
+  document.getElementById('tabPanelProd').classList.remove('active');
+});
+
+document.getElementById('tabBtnProd').addEventListener('click', () => {
+  document.getElementById('tabBtnProd').classList.add('active');
+  document.getElementById('tabBtnCal').classList.remove('active');
+  document.getElementById('tabPanelProd').classList.add('active');
+  document.getElementById('tabPanelCal').classList.remove('active');
 });
 
 renderCalendar();
+renderProducts();
+
 </script>
 </body>
 </html>
