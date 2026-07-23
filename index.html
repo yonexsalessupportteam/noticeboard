@@ -322,7 +322,7 @@
 // note는 선택사항입니다. 일정이 당겨지거나 밀릴 때 "7/29->7/24 당김" 처럼 적어두면
 // 출고캘린더 카드와 신상품 초도출고현황 카드 양쪽에 변경 이력으로 표시됩니다.
 const NOTICES = [
-  { id: 20, title: "게임웨어/캐쥬얼웨어 출고", body: "263TS011/263TS012/263TS035/263TS038/263TS039/263TS040/263TS044/263TS046/263TS048(전략점 전용)/263TS050(온라인 전용)", author: "영업지원팀", date: "2026-07-29", note: "" },
+  { id: 20, title: "게임웨어/캐쥬얼웨어 출고", body: "263TS011/263TS012/263TS035/263TS038/263TS039/263TS040/263TS044/263TS046/263TS048(전략점 전용)", author: "영업지원팀", date: "2026-07-29", note: "" },
 ];
 
 // 신상품 초도 출고 현황: done을 true로 바꾸면 "초도출고완료"로 표시됩니다.
@@ -457,6 +457,13 @@ const PRODUCTS = [
   { no:137, category:"햄스트링보호대", code:"269SP006U\n(햄스트링보호대)", size:"S,M,L", color:"BK", initial:1500, eta:"2026-08-31", done:false, group:"세양" },
   { no:138, category:"헤어밴드", code:"269BN006U", size:"FREE", color:"LC", initial:3500, eta:"2026-08-04", done:false, group:"세양" },
   { no:139, category:"헤어밴드", code:"269BN006U", size:"FREE", color:"IB", initial:3500, eta:"2026-08-04", done:false, group:"세양" },
+  // 온라인전용 상품: 목록에는 표시하지 않지만(hidden), 출고캘린더 분류 매칭용으로 유지
+  { no:116, category:"반팔티(온라인)", code:"263TS050U(온라인전용)", size:"85~110", color:"WH", initial:800, eta:"2026-07-16", done:false, group:"세양", hidden:true },
+  { no:117, category:"반팔티(온라인)", code:"263TS051U(온라인전용)", size:"85~110", color:"AP", initial:600, eta:"2026-07-22", done:false, group:"세양", hidden:true },
+  { no:118, category:"반팔티(온라인)", code:"263TS052U(온라인전용)", size:"85~110", color:"PI", initial:600, eta:"2026-07-27", done:false, group:"세양", hidden:true },
+  { no:119, category:"반팔티(온라인)", code:"263TS053U(온라인전용)", size:"85~110", color:"BK", initial:1000, eta:"2026-08-04", done:false, group:"세양", hidden:true },
+  { no:120, category:"이지웨어반팔(온라인)", code:"263TS054U(온라인전용)", size:"85~110", color:"BK", initial:1500, eta:"2026-07-29", done:false, group:"세양", hidden:true },
+  { no:121, category:"이지웨어반팔(온라인)", code:"263TS054U(온라인전용)", size:"85~110", color:"MN", initial:1500, eta:"2026-07-29", done:false, group:"세양", hidden:true },
 
 ];
 const _today = new Date();
@@ -646,6 +653,7 @@ function productCardHTML(p){
 function renderProducts(){
   const term = searchTerm.trim().toLowerCase();
   const list = PRODUCTS.filter(p => {
+    if(p.hidden) return false;
     const matchesTerm = !term ||
       p.code.toLowerCase().includes(term) ||
       p.category.toLowerCase().includes(term) ||
