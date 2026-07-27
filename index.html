@@ -334,6 +334,7 @@ const NOTICES = [
   { id: 20, title: "게임웨어/캐쥬얼웨어 출고", body: "263TS011/263TS012/263TS017/263TS018/263TS035/263TS038/263TS039/263TS040/263TS044/263TS046(전략점 전용)/263TS048(전략점 전용)/263TS050(온라인 전용)", author: "영업지원팀", date: "2026-07-29", note: "" },
   { id: 21, title: "이지웨어", body: "269TR013/269TR014/269TR015/269TR016", author: "영업지원팀", date: "2026-07-31", note: "" },
   { id: 22, title: "반바지", body: "263PH001/263PH002", author: "영업지원팀", date: "2026-08-03", note: "" },
+  { id: 23, title: "배드민턴화 출고", body: "88 DIAL 3 (2026)/CASCADE ACCEL 2", author: "영업지원팀", date: "2026-08-07", note: "" },
 ];
 
 // 신상품 초도 출고 현황: done을 true로 바꾸면 "초도출고완료"로 표시됩니다.
@@ -547,15 +548,23 @@ function findCategoryForCode(code){
 function noticeCardHTML(n){
   const codes = n.body.split('/').map(c => c.trim()).filter(Boolean);
   const byCat = {};
+  const uncategorized = [];
   codes.forEach(c => {
-    const cat = findCategoryForCode(c) || '기타';
-    (byCat[cat] = byCat[cat] || []).push(c);
+    const cat = findCategoryForCode(c);
+    if(cat){
+      (byCat[cat] = byCat[cat] || []).push(c);
+    } else {
+      uncategorized.push(c);
+    }
   });
   const groupsHTML = Object.keys(byCat).map(cat => `
     <div class="code-group">
       <div class="code-group-label">${cat}</div>
       <div class="code-list">${byCat[cat].map(c => `<span class="code-chip">${c}</span>`).join('')}</div>
-    </div>`).join('');
+    </div>`).join('') + (uncategorized.length ? `
+    <div class="code-group">
+      <div class="code-list">${uncategorized.map(c => `<span class="code-chip">${c}</span>`).join('')}</div>
+    </div>` : '');
   const noteHTML = n.note ? `<div class="notice-note">변경: ${n.note}</div>` : '';
   return `
     <div class="notice-card">
