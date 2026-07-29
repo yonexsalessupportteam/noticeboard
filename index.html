@@ -136,6 +136,8 @@
     content:'●';position:absolute;left:6px;top:50%;transform:translateY(-50%);
     font-size:8px;color:#C0142C;
   }
+  .cal-chip.done{background:#E8F5E9;color:#2E7D32;}
+  .cal-cell.selected .cal-chip.done{background:rgba(255,255,255,0.9);color:#2E7D32;}
   .cal-more{font-size:11px;color:var(--ink-soft);font-weight:700;padding-left:2px;}
 
   .cal-detail{margin-top:28px;padding-top:26px;border-top:2px dashed var(--border);}
@@ -149,7 +151,14 @@
     background:#F3F9FD;border-left:4px solid var(--teal);border-radius:12px;
     padding:16px 20px;
   }
+  .notice-card.done{border-left-color:#2E7D32;}
+  .notice-title-row{display:flex;align-items:center;justify-content:space-between;gap:10px;}
   .notice-title{font-weight:700;font-size:15.5px;color:var(--ink);}
+  .notice-badge{
+    font-size:11.5px;font-weight:800;border-radius:20px;padding:4px 11px;white-space:nowrap;
+  }
+  .notice-badge.done{background:#E8F5E9;color:#2E7D32;}
+  .notice-badge.wait{background:var(--teal-light);color:var(--teal-dark);}
   .notice-body{font-size:13.5px;color:var(--ink-soft);line-height:1.6;margin-top:6px;}
   .code-list{display:flex;flex-wrap:wrap;gap:6px;}
   .code-group{margin-top:12px;padding-left:10px;border-left:3px solid var(--teal);}
@@ -330,12 +339,13 @@
 // 여기 배열만 직접 수정하면 출고 스케줄이 반영됩니다.
 // note는 선택사항입니다. 일정이 당겨지거나 밀릴 때 "7/29->7/24 당김" 처럼 적어두면
 // 출고캘린더 카드와 신상품 초도출고현황 카드 양쪽에 변경 이력으로 표시됩니다.
+// done을 true로 바꾸면 해당 출고 건이 "출고완료"로 표시됩니다.
 const NOTICES = [
-  { id: 20, title: "게임웨어/캐쥬얼웨어 출고", body: "263TS011/263TS012/263TS017/263TS018/263TS035/263TS038/263TS039/263TS040/263TS044/263TS046(전략점 전용)/263TS048(전략점 전용)/263TS050(온라인 전용)", author: "영업지원팀", date: "2026-07-29", note: "" },
-  { id: 21, title: "이지웨어", body: "269TR013/269TR014/269TR015/269TR016", author: "영업지원팀", date: "2026-07-30", note: "7.31->7.30 일정당겨짐" },
-  { id: 22, title: "반바지", body: "263PH001/263PH002", author: "영업지원팀", date: "2026-08-03", note: "" },
-  { id: 23, title: "배드민턴화 출고", body: "88 DIAL 3 (2026)/CASCADE ACCEL 2", author: "영업지원팀", date: "2026-08-07", note: "" },
-  { id: 24, title: "국대의류", body: "15239YX/25112YX/10716YX/20948YX/20950YX", author: "영업지원팀", date: "2026-08-03", note: "" },
+  { id: 20, title: "게임웨어/캐쥬얼웨어 출고", body: "263TS011/263TS012/263TS017/263TS018/263TS035/263TS038/263TS039/263TS040/263TS044/263TS046(전략점 전용)/263TS048(전략점 전용)/263TS050(온라인 전용)", author: "영업지원팀", date: "2026-07-29", note: "", done: true },
+  { id: 21, title: "이지웨어", body: "269TR013/269TR014/269TR015/269TR016", author: "영업지원팀", date: "2026-07-30", note: "7.31->7.30 일정당겨짐", done: false },
+  { id: 22, title: "반바지", body: "263PH001/263PH002", author: "영업지원팀", date: "2026-08-03", note: "", done: false },
+  { id: 23, title: "배드민턴화 출고", body: "88 DIAL 3 (2026)/CASCADE ACCEL 2", author: "영업지원팀", date: "2026-08-07", note: "", done: false },
+  { id: 24, title: "국대의류", body: "15239YX/25112YX/10716YX/20948YX/20950YX", author: "영업지원팀", date: "2026-08-03", note: "", done: false },
 ];
 
 // 신상품 초도 출고 현황: done을 true로 바꾸면 "초도출고완료"로 표시됩니다.
@@ -567,9 +577,15 @@ function noticeCardHTML(n){
       <div class="code-list">${uncategorized.map(c => `<span class="code-chip">${c}</span>`).join('')}</div>
     </div>` : '');
   const noteHTML = n.note ? `<div class="notice-note">변경: ${n.note}</div>` : '';
+  const statusBadge = n.done
+    ? `<span class="notice-badge done">출고완료</span>`
+    : `<span class="notice-badge wait">출고예정</span>`;
   return `
-    <div class="notice-card">
-      <div class="notice-title">${n.title}</div>
+    <div class="notice-card ${n.done ? 'done' : ''}">
+      <div class="notice-title-row">
+        <div class="notice-title">${n.title}</div>
+        ${statusBadge}
+      </div>
       ${groupsHTML}
       ${noteHTML}
     </div>`;
@@ -612,7 +628,9 @@ function renderCalendar(){
     const hasItems = items.length > 0;
     const chips = items.slice(0,2).map(n => {
       const changed = !!n.note;
-      return `<div class="cal-chip ${changed ? 'changed' : ''}" title="${n.title}${changed ? ' (일정 변경: ' + n.note + ')' : ''}">${n.title}</div>`;
+      const doneClass = n.done ? 'done' : '';
+      const titleAttr = `${n.title}${n.done ? ' (출고완료)' : ''}${changed ? ' (일정 변경: ' + n.note + ')' : ''}`;
+      return `<div class="cal-chip ${changed ? 'changed' : ''} ${doneClass}" title="${titleAttr}">${n.done ? '✓ ' : ''}${n.title}</div>`;
     }).join('');
     const more = items.length > 2 ? `<div class="cal-more">+${items.length-2}건</div>` : '';
     const classes = ['cal-cell'];
@@ -699,7 +717,7 @@ function productCardHTML(p){
     : `<span class="prod-badge wait">출고예정</span>`;
   const calNotice = findCalendarNotice(p.code);
   const shipEtaHTML = calNotice
-    ? `<div class="prod-ship-eta">출고 예정일 : ${formatShipDate(calNotice.date)}</div>`
+    ? `<div class="prod-ship-eta">${p.done ? '출고일' : '출고 예정일'} : ${formatShipDate(calNotice.date)}</div>`
     : '';
   const noteHTML = (calNotice && calNotice.note)
     ? `<div class="prod-note">변경: ${calNotice.note}</div>`
