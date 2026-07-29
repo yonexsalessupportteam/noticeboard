@@ -81,12 +81,16 @@
   .change-legend{
     display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;
     color:#C0142C;background:#FDEBEC;padding:8px 14px;border-radius:20px;white-space:nowrap;
+    cursor:pointer;border:2px solid transparent;user-select:none;transition:box-shadow .15s,border-color .15s;
   }
+  .change-legend.active{border-color:#C0142C;box-shadow:0 2px 10px rgba(192,20,44,0.25);}
   .change-dot{width:7px;height:7px;border-radius:50%;background:#C0142C;display:inline-block;}
   .done-legend{
     display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;
     color:#2E7D32;background:#E8F5E9;padding:8px 14px;border-radius:20px;white-space:nowrap;
+    cursor:pointer;border:2px solid transparent;user-select:none;transition:box-shadow .15s,border-color .15s;
   }
+  .done-legend.active{border-color:#2E7D32;box-shadow:0 2px 10px rgba(46,125,50,0.25);}
   .done-dot{width:7px;height:7px;border-radius:50%;background:#2E7D32;display:inline-block;}
 
   /* Calendar */
@@ -552,6 +556,7 @@ let calMonth = _today.getMonth() + 1; // 1~12
 let selectedDate = null;
 let searchTerm = "";
 let productFilter = null; // null | 'confirmed' | 'wait' | 'done'
+let calFilter = null; // null | 'done' | 'changed'
 
 function formatDate(d){
   const [y,m,day] = d.split("-");
@@ -609,8 +614,13 @@ function renderCalDetailHTML(dateStr, items){
 
 function renderCalendar(){
   const term = searchTerm.trim().toLowerCase();
-  const shipments = NOTICES.filter(n =>
-    !term || n.title.toLowerCase().includes(term) || n.body.toLowerCase().includes(term));
+  const shipments = NOTICES.filter(n => {
+    const matchesTerm = !term || n.title.toLowerCase().includes(term) || n.body.toLowerCase().includes(term);
+    let matchesFilter = true;
+    if(calFilter === 'done') matchesFilter = !!n.done;
+    else if(calFilter === 'changed') matchesFilter = !!n.note;
+    return matchesTerm && matchesFilter;
+  });
 
   const byDate = {};
   shipments.forEach(n => { (byDate[n.date] = byDate[n.date] || []).push(n); });
@@ -811,6 +821,14 @@ function renderProducts(){
   document.getElementById('productView').innerHTML = `<div class="prod-wrap">${groupsHTML}</div>`;
 }
 
+function setCalFilter(f){
+  calFilter = (calFilter === f) ? null : f; // 같은 배지 다시 누르면 전체 보기로
+  document.getElementById('doneLegend').classList.toggle('active', calFilter === 'done');
+  document.getElementById('changeLegend').classList.toggle('active', calFilter === 'changed');
+  selectedDate = null;
+  renderCalendar();
+}
+
 function setProductFilter(f){
   productFilter = (productFilter === f) ? null : f; // 같은 버튼 다시 누르면 전체 보기로
   document.getElementById('filterConfirmed').classList.toggle('active', productFilter === 'confirmed');
@@ -819,6 +837,8 @@ function setProductFilter(f){
   renderProducts();
 }
 
+document.getElementById('doneLegend').addEventListener('click', () => setCalFilter('done'));
+document.getElementById('changeLegend').addEventListener('click', () => setCalFilter('changed'));
 document.getElementById('filterConfirmed').addEventListener('click', () => setProductFilter('confirmed'));
 document.getElementById('filterWait').addEventListener('click', () => setProductFilter('wait'));
 document.getElementById('filterDone').addEventListener('click', () => setProductFilter('done'));
