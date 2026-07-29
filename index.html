@@ -83,6 +83,11 @@
     color:#C0142C;background:#FDEBEC;padding:8px 14px;border-radius:20px;white-space:nowrap;
   }
   .change-dot{width:7px;height:7px;border-radius:50%;background:#C0142C;display:inline-block;}
+  .done-legend{
+    display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;
+    color:#2E7D32;background:#E8F5E9;padding:8px 14px;border-radius:20px;white-space:nowrap;
+  }
+  .done-dot{width:7px;height:7px;border-radius:50%;background:#2E7D32;display:inline-block;}
 
   /* Calendar */
   .cal-wrap{
@@ -309,7 +314,8 @@
 
     <div class="toolbar">
       <input class="search-box" id="searchBox" type="text" placeholder="상품코드/품목 검색">
-      <div class="change-legend" id="changeLegend"><span class="change-dot"></span>일정 변경됨</div>
+      <div class="done-legend" id="doneLegend"><span class="done-dot"></span>출고완료</div>
+      <div class="change-legend" id="changeLegend"><span class="change-dot"></span>일정변경</div>
     </div>
 
     <div class="tab-panel active" id="tabPanelCal">
@@ -828,6 +834,7 @@ document.getElementById('tabBtnCal').addEventListener('click', () => {
   document.getElementById('tabPanelCal').classList.add('active');
   document.getElementById('tabPanelProd').classList.remove('active');
   document.getElementById('changeLegend').style.display = 'flex';
+  document.getElementById('doneLegend').style.display = 'flex';
 });
 
 document.getElementById('tabBtnProd').addEventListener('click', () => {
@@ -836,6 +843,7 @@ document.getElementById('tabBtnProd').addEventListener('click', () => {
   document.getElementById('tabPanelProd').classList.add('active');
   document.getElementById('tabPanelCal').classList.remove('active');
   document.getElementById('changeLegend').style.display = 'none';
+  document.getElementById('doneLegend').style.display = 'none';
 });
 
 renderCalendar();
