@@ -644,7 +644,8 @@ function renderCalendar(){
     const isToday = dateStr === todayStr;
     const isSelected = dateStr === selectedDate;
     const hasItems = items.length > 0;
-    const chips = items.slice(0,2).map(n => {
+    const sortedItems = items.slice().sort((a,b) => (b.note ? 1 : 0) - (a.note ? 1 : 0));
+    const chips = sortedItems.slice(0,2).map(n => {
       const changed = !!n.note;
       const doneClass = n.done ? 'done' : '';
       const titleAttr = `${n.title}${n.done ? ' (출고완료)' : ''}${changed ? ' (일정 변경: ' + n.note + ')' : ''}`;
