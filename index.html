@@ -373,8 +373,9 @@ const NOTICES = [
   { id: 39, title: "게임웨어", body: "263TS005/263TS006/263TS029/263TS030", author: "영업지원팀", date: "2026-08-12", note: "8.13->8.12 일정당겨짐", done: true },
   { id: 40, title: "이지웨어", body: "269TL001/269TL002", author: "영업지원팀", date: "2026-08-12", note: "", done: true },
   { id: 41, title: "수입양말", body: "19273EX", author: "영업지원팀", date: "2026-08-12", note: "", done: true },
-  { id: 42, title: "캐쥬얼웨어", body: "263TS045", author: "영업지원팀", date: "2026-08-13", note: "", done: false },
-  { id: 43, title: "게임웨어", body: "263TS007/263TS008", author: "영업지원팀", date: "2026-08-13", note: "", done: false },
+  { id: 42, title: "캐쥬얼웨어", body: "263TS045", author: "영업지원팀", date: "2026-08-13", note: "", done: true },
+  { id: 43, title: "게임웨어", body: "263TS007/263TS008", author: "영업지원팀", date: "2026-08-13", note: "", done: true },
+  { id: 43, title: "수입의류", body: "16868EX/70108EX/80108EX/15284EX/26235EX/51073EX/61073EX/31063EX/YOB26190EX", author: "영업지원팀", date: "2026-08-14", note: "", done: false },
 ];
 
 // 신상품 초도 출고 현황: done을 true로 바꾸면 "초도출고완료"로 표시됩니다.
@@ -385,8 +386,8 @@ const PRODUCTS = [
   { no:4, category:"티셔츠", code:"263TS004F", size:"85~100", color:"BK", initial:1920, eta:"2026-07-29", detailCategory:"반팔티(게임웨어)", collection:"의류", done:true, group:"세양" },
   { no:5, category:"티셔츠", code:"263TS005M", size:"95~120", color:"WH", initial:1920, eta:"2026-08-10", detailCategory:"반팔티(게임웨어)", collection:"의류", done:true, group:"세양" },
   { no:6, category:"티셔츠", code:"263TS006F", size:"85~100", color:"WH", initial:1280, eta:"2026-08-10", detailCategory:"반팔티(게임웨어)", collection:"의류", done:true, group:"세양" },
-  { no:7, category:"티셔츠", code:"263TS007M", size:"95~120", color:"WH", initial:1890, eta:"2026-08-13", detailCategory:"반팔티(게임웨어)", collection:"의류", done:false, group:"세양" },
-  { no:8, category:"티셔츠", code:"263TS008F", size:"80~100", color:"WH", initial:1260, eta:"2026-08-13", detailCategory:"반팔티(게임웨어)", collection:"의류", done:false, group:"세양" },
+  { no:7, category:"티셔츠", code:"263TS007M", size:"95~120", color:"WH", initial:1890, eta:"2026-08-13", detailCategory:"반팔티(게임웨어)", collection:"의류", done:true, group:"세양" },
+  { no:8, category:"티셔츠", code:"263TS008F", size:"80~100", color:"WH", initial:1260, eta:"2026-08-13", detailCategory:"반팔티(게임웨어)", collection:"의류", done:true, group:"세양" },
   { no:9, category:"티셔츠", code:"263TS009M", size:"95~120", color:"PI", initial:1920, eta:"2026-08-14", detailCategory:"반팔티(게임웨어)", collection:"의류", done:false, group:"세양" },
   { no:10, category:"티셔츠", code:"263TS010F", size:"85~100", color:"PI", initial:1280, eta:"2026-08-14", detailCategory:"반팔티(게임웨어)", collection:"의류", done:false, group:"세양" },
   { no:11, category:"티셔츠", code:"263TS011M", size:"95~120", color:"BK", initial:1170, eta:"2026-07-21", detailCategory:"반팔티(게임웨어)", collection:"의류", done:true, group:"세양" },
@@ -431,7 +432,7 @@ const PRODUCTS = [
   { no:50, category:"티셔츠", code:"263TS042U", size:"85~110", color:"GY", initial:2200, eta:"2026-07-29", detailCategory:"반팔티(캐주얼)", collection:"의류", done:true, group:"세양" },
   { no:51, category:"티셔츠", code:"263TS043U", size:"85~110", color:"GC", initial:2100, eta:"2026-07-23", detailCategory:"반팔티(캐주얼)", collection:"의류", done:true, group:"세양" },
   { no:52, category:"티셔츠", code:"263TS044U", size:"85~110", color:"PB", initial:2600, eta:"2026-07-16", detailCategory:"반팔티(캐주얼)", collection:"의류", done:true, group:"세양" },
-  { no:53, category:"티셔츠", code:"263TS045U", size:"85~110", color:"GY", initial:2100, eta:"2026-08-07", detailCategory:"반팔티(캐주얼)", collection:"의류", done:false, group:"세양" },
+  { no:53, category:"티셔츠", code:"263TS045U", size:"85~110", color:"GY", initial:2100, eta:"2026-08-07", detailCategory:"반팔티(캐주얼)", collection:"의류", done:true, group:"세양" },
   { no:54, category:"티셔츠", code:"263TS046U(전략점 전용)", size:"85~110", color:"BK", initial:1000, eta:"2026-07-09", detailCategory:"반팔티(캐주얼)", collection:"의류", done:true, group:"세양" },
   { no:55, category:"티셔츠", code:"263TS047U(전략점 전용)", size:"85~110", color:"PB", initial:1000, eta:"2026-08-07", detailCategory:"반팔티(캐주얼)", collection:"의류", done:true, group:"세양" },
   { no:56, category:"티셔츠", code:"263TS048U(전략점 전용)", size:"85~110", color:"TB", initial:1000, eta:"2026-07-14", detailCategory:"반팔티(캐주얼)", collection:"의류", done:true, group:"세양" },
