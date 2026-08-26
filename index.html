@@ -305,7 +305,7 @@
     </div>
     <h1 class="board-title">26F/W <span class="accent">수주 출고</span> 스케줄</h1>
     <div><span class="board-sub">대리점 안내용</span></div>
-    <div class="board-meta">최근 업데이트 2026.08.25</div>
+    <div class="board-meta">최근 업데이트 2026.08.26</div>
   </header>
 
   <div class="content">
@@ -384,8 +384,9 @@ const NOTICES = [
   { id: 50, title: "츄상의", body: "263WU001/263WU002", author: "영업지원팀", date: "2026-08-21", note: "", done: true },
   { id: 51, title: "자켓", body: "263JJ002/263JJ003", author: "영업지원팀", date: "2026-08-24", note: "", done: true },
   { id: 52, title: "민소매", body: "263TR002", author: "영업지원팀", date: "2026-08-24", note: "", done: true },
-  { id: 53, title: "일본 국가대표", body: "10756YX/21002YX", author: "영업지원팀", date: "2026-08-25", note: "", done: false },
-  { id: 54, title: "가방", body: "269BA029", author: "영업지원팀", date: "2026-08-25", note: "", done: false },
+  { id: 53, title: "일본 국가대표", body: "10756YX/21002YX", author: "영업지원팀", date: "2026-08-25", note: "", done: true },
+  { id: 54, title: "가방", body: "269BA029", author: "영업지원팀", date: "2026-08-25", note: "", done: true },
+  { id: 55, title: "이지웨어 2차", body: "269TR011/269TR012", author: "영업지원팀", date: "2026-08-26", note: "", done: false },
 ];
 
 // 신상품 초도 출고 현황: done을 true로 바꾸면 "초도출고완료"로 표시됩니다.
@@ -515,7 +516,7 @@ const PRODUCTS = [
   { no:129, category:"양말", code:"269SN008F", size:"FREE", color:"WH", initial:3000, eta:"2026-08-28", detailCategory:"압박양말(여)", collection:"액세서리", done:false, group:"세양" },
   { no:130, category:"양말", code:"269SN009M(전판 논슬립)", size:"FREE", color:"WH", initial:2000, eta:"2026-08-28", detailCategory:"논슬립양말(남)", collection:"액세서리", done:false, group:"세양" },
   { no:131, category:"양말", code:"269SN010F(전판 논슬립)", size:"FREE", color:"WH", initial:1000, eta:"2026-08-28", detailCategory:"논슬립양말(여)", collection:"액세서리", done:false, group:"세양" },
-  { no:134, category:"가방액세서리", code:"269BA029U", size:"FREE", color:"GY", initial:700, eta:"2026-08-21", detailCategory:"슬링백", collection:"액세서리", done:false, group:"세양" },
+  { no:134, category:"가방액세서리", code:"269BA029U", size:"FREE", color:"GY", initial:700, eta:"2026-08-21", detailCategory:"슬링백", collection:"액세서리", done:true, group:"세양" },
   { no:136, category:"기타", code:"269AA001U", size:"FREE", color:"BL", initial:3000, eta:"2026-08-12", detailCategory:"신발탈취제(2개입) ", collection:"액세서리", done:false, group:"세양" },
   { no:137, category:"보호대", code:"269SP006U\n(햄스트링보호대)", size:"S,M,L", color:"BK", initial:1500, eta:"2026-08-31", detailCategory:"햄스트링보호대", collection:"액세서리", done:false, group:"세양" },
   { no:138, category:"밴드", code:"269BN006U", size:"FREE", color:"LC", initial:3500, eta:"2026-08-04", detailCategory:"헤어밴드", collection:"액세서리", done:true, group:"세양" },
@@ -548,9 +549,9 @@ const PRODUCTS = [
   { no:316, category:"수입 - 밴드", detailCategory:"ACC 공용 헤어밴드", collection:"ACC", code:"46066EX", size:"FREE", color:"BLACK", initial:null, eta:null, release:"26년 8월", done:true, group:"수입" },
   { no:317, category:"수입 - 밴드", detailCategory:"ACC 여성 스크런치", collection:"ACC", code:"46067EX", size:"FREE", color:"ASSORTED", initial:null, eta:null, release:"26년 8월", done:true, group:"수입" },
   { no:318, category:"수입 - 밴드", detailCategory:"ACC 여성 스크런치", collection:"ACC", code:"46067EX", size:"FREE", color:"BLACK", initial:null, eta:null, release:"26년 8월", done:true, group:"수입" },
-  { no:319, category:"수입 - 티셔츠", detailCategory:"26FW 일본 국가대표 남성 반팔티", collection:"26FW 일본 국가대표", code:"10756YX", size:"M~3XL", color:"CORAL RED", initial:null, eta:null, release:"26년 8월", done:false, group:"수입" },
+  { no:319, category:"수입 - 티셔츠", detailCategory:"26FW 일본 국가대표 남성 반팔티", collection:"26FW 일본 국가대표", code:"10756YX", size:"M~3XL", color:"CORAL RED", initial:null, eta:null, release:"26년 8월", done:true, group:"수입" },
   { no:320, category:"수입 - 바지류", detailCategory:"26FW 일본 국가대표 남성 반바지", collection:"26FW 일본 국가대표", code:"15258YX", size:"M~2XL", color:"WHITE", initial:null, eta:null, release:"26년 8월", done:false, group:"수입" },
-  { no:321, category:"수입 - 티셔츠", detailCategory:"26FW 일본 국가대표 여성 반팔티", collection:"26FW 일본 국가대표", code:"21002YX", size:"M~3XL", color:"CORAL RED", initial:null, eta:null, release:"26년 8월", done:false, group:"수입" },
+  { no:321, category:"수입 - 티셔츠", detailCategory:"26FW 일본 국가대표 여성 반팔티", collection:"26FW 일본 국가대표", code:"21002YX", size:"M~3XL", color:"CORAL RED", initial:null, eta:null, release:"26년 8월", done:true, group:"수입" },
   { no:322, category:"수입 - 바지류", detailCategory:"26FW 일본 국가대표 여성 치마", collection:"26FW 일본 국가대표", code:"26208YX", size:"M~2XL", color:"WHITE", initial:null, eta:null, release:"26년 8월", done:false, group:"수입" },
   { no:323, category:"수입 - 츄리닝", detailCategory:"26FW 일본 국가대표 공용 츄상의", collection:"26FW 일본 국가대표", code:"70108EX", size:"S~3XL", color:"OFF WHITE", initial:null, eta:null, release:"26년 8월", done:true, group:"수입" },
   { no:324, category:"수입 - 츄리닝", detailCategory:"26FW 일본 국가대표 공용 츄하의", collection:"26FW 일본 국가대표", code:"80108EX", size:"S~3XL", color:"BLACK", initial:null, eta:null, release:"26년 8월", done:true, group:"수입" },
