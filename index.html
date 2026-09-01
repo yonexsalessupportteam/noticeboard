@@ -305,7 +305,7 @@
     </div>
     <h1 class="board-title">26F/W <span class="accent">수주 출고</span> 스케줄</h1>
     <div><span class="board-sub">대리점 안내용</span></div>
-    <div class="board-meta">최근 업데이트 2026.09.01</div>
+    <div class="board-meta">최근 업데이트 2026.09.02</div>
   </header>
 
   <div class="content">
@@ -391,11 +391,11 @@ const NOTICES = [
   { id: 57, title: "긴팔티", body: "263TL003", author: "영업지원팀", date: "2026-08-27", note: "", done: true },
   { id: 58, title: "츄하의", body: "263WP003", author: "영업지원팀", date: "2026-08-28", note: "", done: true },
   { id: 59, title: "자켓", body: "263JJ001/263JJ004", author: "영업지원팀", date: "2026-08-28", note: "", done: true },
-  { id: 60, title: "양말", body: "269SN007/269SN008/269SN009/269SN010", author: "영업지원팀", date: "2026-09-01", note: "", done: false },
-  { id: 61, title: "탈취제", body: "269AA001", author: "영업지원팀", date: "2026-09-01", note: "", done: false },
+  { id: 60, title: "양말", body: "269SN007/269SN008/269SN009/269SN010", author: "영업지원팀", date: "2026-09-01", note: "", done: true },
+  { id: 61, title: "탈취제", body: "269AA001", author: "영업지원팀", date: "2026-09-01", note: "", done: true },
   { id: 62, title: "코리아배드민턴 컬렉션", body: "269TS029/269TS030/269JJ004", author: "영업지원팀", date: "2026-08-31", note: "", done: true },
-  { id: 63, title: "후드티/맨투맨", body: "263TH001/263TH003", author: "영업지원팀", date: "2026-09-01", note: "", done: false },
-  { id: 64, title: "츄상의", body: "263WU003", author: "영업지원팀", date: "2026-09-01", note: "", done: false },
+  { id: 63, title: "후드티/맨투맨", body: "263TH001/263TH003", author: "영업지원팀", date: "2026-09-01", note: "", done: true },
+  { id: 64, title: "츄상의", body: "263WU003", author: "영업지원팀", date: "2026-09-01", note: "", done: true },
   
 ];
 
@@ -463,9 +463,9 @@ const PRODUCTS = [
   { no:60, category:"티셔츠", code:"263TL002U", size:"85~110", color:"BK", initial:1150, eta:"2026-08-14", detailCategory:"긴팔티(캐주얼)", collection:"의류", done:true, group:"세양" },
   { no:61, category:"티셔츠", code:"263TL003U", size:"85~110", color:"MG", initial:800, eta:"2026-08-26", detailCategory:"맨투맨(캐주얼)", collection:"의류", done:true, group:"세양" },
   { no:62, category:"티셔츠", code:"263TL004U", size:"85~110", color:"MW", initial:600, eta:"2026-08-07", detailCategory:"맨투맨(캐주얼)", collection:"의류", done:true, group:"세양" },
-  { no:63, category:"티셔츠", code:"263TH001U", size:"85~110", color:"BG", initial:750, eta:"2026-08-24", detailCategory:"후드티(캐주얼)", collection:"의류", done:false, group:"세양" },
+  { no:63, category:"티셔츠", code:"263TH001U", size:"85~110", color:"BG", initial:750, eta:"2026-08-24", detailCategory:"후드티(캐주얼)", collection:"의류", done:true, group:"세양" },
   { no:64, category:"티셔츠", code:"263TH002U", size:"85~110", color:"BK", initial:630, eta:"2026-08-28", detailCategory:"후드티(캐주얼)", collection:"의류", done:false, group:"세양" },
-  { no:65, category:"티셔츠", code:"263TH003U", size:"85~110", color:"SC", initial:930, eta:"2026-08-28", detailCategory:"후드집업(캐주얼)", collection:"의류", done:false, group:"세양" },
+  { no:65, category:"티셔츠", code:"263TH003U", size:"85~110", color:"SC", initial:930, eta:"2026-08-28", detailCategory:"후드집업(캐주얼)", collection:"의류", done:true, group:"세양" },
   { no:66, category:"바지류", code:"263PH001M", size:"95~110", color:"DG", initial:1320, eta:"2026-07-07", detailCategory:"반바지", collection:"의류", done:true, group:"세양" },
   { no:67, category:"바지류", code:"263PH002F", size:"85~100", color:"DG", initial:880, eta:"2026-07-07", detailCategory:"반바지", collection:"의류", done:true, group:"세양" },
   { no:68, category:"바지류", code:"263PH001M", size:"95~110", color:"BK", initial:1380, eta:"2026-07-07", detailCategory:"반바지", collection:"의류", done:true, group:"세양" },
@@ -474,7 +474,7 @@ const PRODUCTS = [
   { no:71, category:"바지류", code:"263PL002U", size:"85~110", color:"BK", initial:950, eta:"2026-08-31", detailCategory:"긴바지", collection:"의류", done:false, group:"세양" },
   { no:72, category:"츄리닝", code:"263WU001M", size:"95~120", color:"BK", initial:1140, eta:"2026-08-21", detailCategory:"츄상의(우븐)", collection:"의류", done:true, group:"세양" },
   { no:73, category:"츄리닝", code:"263WU002F", size:"85~100", color:"BK", initial:760, eta:"2026-08-21", detailCategory:"츄상의(우븐)", collection:"의류", done:true, group:"세양" },
-  { no:74, category:"츄리닝", code:"263WU003U", size:"80~110", color:"MV", initial:2000, eta:"2026-08-31", detailCategory:"츄상의(우븐)", collection:"의류", done:false, group:"세양" },
+  { no:74, category:"츄리닝", code:"263WU003U", size:"80~110", color:"MV", initial:2000, eta:"2026-08-31", detailCategory:"츄상의(우븐)", collection:"의류", done:true, group:"세양" },
   { no:75, category:"츄리닝", code:"263WU005M", size:"95~120", color:"DC", initial:1140, eta:"2026-09-18", detailCategory:"츄상의(우븐퀄팅)", collection:"의류", done:false, group:"세양" },
   { no:76, category:"츄리닝", code:"263WU006F", size:"85~100", color:"DC", initial:760, eta:"2026-09-18", detailCategory:"츄상의(우븐퀄팅)", collection:"의류", done:false, group:"세양" },
   { no:77, category:"츄리닝", code:"263WU007M", size:"95~120", color:"BK", initial:1440, eta:"2026-09-18", detailCategory:"츄상의(니트패딩)", collection:"의류", done:false, group:"세양" },
@@ -522,12 +522,12 @@ const PRODUCTS = [
   { no:125, category:"티셔츠", code:"269TS032F", size:"85~100", color:"WH", initial:880, eta:"2026-08-21", detailCategory:"2026 아시안게임 SPOT", collection:"의류", done:true, group:"세양" },
   { no:126, category:"자켓", code:"269JJ004U", size:"85~110", color:"WH", initial:1900, eta:"2026-09-11", detailCategory:"2026 아시안게임 SPOT", collection:"의류", done:true, group:"세양" },
   { no:127, category:"자켓", code:"269JJ005U", size:"85~110", color:"WH", initial:2270, eta:"2026-09-18", detailCategory:"25주년 SPOT", collection:"의류", done:false, group:"세양" },
-  { no:128, category:"양말", code:"269SN007M", size:"FREE", color:"WH", initial:5000, eta:"2026-08-28", detailCategory:"압박양말(남)", collection:"액세서리", done:false, group:"세양" },
-  { no:129, category:"양말", code:"269SN008F", size:"FREE", color:"WH", initial:3000, eta:"2026-08-28", detailCategory:"압박양말(여)", collection:"액세서리", done:false, group:"세양" },
-  { no:130, category:"양말", code:"269SN009M(전판 논슬립)", size:"FREE", color:"WH", initial:2000, eta:"2026-08-28", detailCategory:"논슬립양말(남)", collection:"액세서리", done:false, group:"세양" },
-  { no:131, category:"양말", code:"269SN010F(전판 논슬립)", size:"FREE", color:"WH", initial:1000, eta:"2026-08-28", detailCategory:"논슬립양말(여)", collection:"액세서리", done:false, group:"세양" },
+  { no:128, category:"양말", code:"269SN007M", size:"FREE", color:"WH", initial:5000, eta:"2026-08-28", detailCategory:"압박양말(남)", collection:"액세서리", done:true, group:"세양" },
+  { no:129, category:"양말", code:"269SN008F", size:"FREE", color:"WH", initial:3000, eta:"2026-08-28", detailCategory:"압박양말(여)", collection:"액세서리", done:true, group:"세양" },
+  { no:130, category:"양말", code:"269SN009M(전판 논슬립)", size:"FREE", color:"WH", initial:2000, eta:"2026-08-28", detailCategory:"논슬립양말(남)", collection:"액세서리", done:true, group:"세양" },
+  { no:131, category:"양말", code:"269SN010F(전판 논슬립)", size:"FREE", color:"WH", initial:1000, eta:"2026-08-28", detailCategory:"논슬립양말(여)", collection:"액세서리", done:true, group:"세양" },
   { no:134, category:"가방액세서리", code:"269BA029U", size:"FREE", color:"GY", initial:700, eta:"2026-08-21", detailCategory:"슬링백", collection:"액세서리", done:true, group:"세양" },
-  { no:136, category:"기타", code:"269AA001U", size:"FREE", color:"BL", initial:3000, eta:"2026-08-12", detailCategory:"신발탈취제(2개입) ", collection:"액세서리", done:false, group:"세양" },
+  { no:136, category:"기타", code:"269AA001U", size:"FREE", color:"BL", initial:3000, eta:"2026-08-12", detailCategory:"신발탈취제(2개입) ", collection:"액세서리", done:true, group:"세양" },
   { no:137, category:"보호대", code:"269SP006U\n(햄스트링보호대)", size:"S,M,L", color:"BK", initial:1500, eta:"2026-08-31", detailCategory:"햄스트링보호대", collection:"액세서리", done:false, group:"세양" },
   { no:138, category:"밴드", code:"269BN006U", size:"FREE", color:"LC", initial:3500, eta:"2026-08-04", detailCategory:"헤어밴드", collection:"액세서리", done:true, group:"세양" },
   { no:139, category:"밴드", code:"269BN006U", size:"FREE", color:"IB", initial:3500, eta:"2026-08-04", detailCategory:"헤어밴드", collection:"액세서리", done:true, group:"세양" },
